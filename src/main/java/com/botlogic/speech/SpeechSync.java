@@ -26,18 +26,29 @@ public class SpeechSync {
 		this.client = client;
 	}
 	
-	public String getFromFile(File file) throws IllegalAccessException, FileNotFoundException, IOException{
+	public String getFromFile(File file) throws IllegalAccessException, FileNotFoundException, IOException, SpeechException{
 		SpeechDtoIn in = new SpeechDtoIn();
 		in.setConfig(new RecognitionConfig());
 		in.setAudio(RecognitionAudio.create(file));
+		log.debug("Sending: "+in);
 		Response response = client.target(bundle.getString("speech.url")).path("/v1beta1/speech:syncrecognize").queryParam("key", bundle.getString("speech.key")).request().post(Entity.entity(in, MediaType.APPLICATION_JSON_TYPE));
 		if(response.getStatus() == 200){
 			SpeechDtoOut out = response.readEntity(SpeechDtoOut.class);
-			// TODO
-			return out.toString();
+			if(out.getAlternatives().size() > 0){
+				String text = out.getAlternatives().get(0).getTranscript();
+				log.info("Text: "+text);
+				return text;
+			}else{
+				throw new SpeechException("It didn't understand the audio. Response: "+response+" dto: "+out);
+			}
 		}else{
-			throw new IllegalAccessException("Errors in the request "+response);
+			throw new IllegalAccessException("Errors in the request: "+debugResponse(response));
 		}
+	}
+	
+	private String debugResponse(Response response){
+		return "Response: "+response+". Content: "+response.readEntity(Object.class);
+		
 	}
 	
 }

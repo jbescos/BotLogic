@@ -1,9 +1,10 @@
 package com.botlogic.speech;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -19,17 +20,13 @@ public class SpeechTest {
 	private final Client client;
 	
 	public SpeechTest(){
-		client = ClientBuilder.newBuilder().build().register(new LoggingFeature(new java.util.logging.Logger("filter", "config"){
-			@Override
-			public void log(Level level, String msg){
-				log.debug(msg);
-			}
-		}, LoggingFeature.Verbosity.PAYLOAD_ANY));
+		client = ClientBuilder.newBuilder().property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER, "FINEST").build();
 	}
 	
 	@Test
-	public void test() throws IllegalAccessException, FileNotFoundException, IOException{
-		new SpeechSync(client).getFromFile(loadFile("test.m4a"));
+	public void test() throws IllegalAccessException, FileNotFoundException, IOException, SpeechException{
+		String text = new SpeechSync(client).getFromFile(loadFile("good-morning-google.flac"));
+		assertEquals("This is a test", text);
 	}
 	
 	private File loadFile(String fileName){

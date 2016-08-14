@@ -15,6 +15,11 @@ public class SpeechDtoOut {
 		this.alternatives = alternatives;
 	}
 
+	@Override
+	public String toString() {
+		return "SpeechDtoOut [alternatives=" + alternatives + "]";
+	}
+
 	public static class SpeechRecognitionAlternative {
 		private String transcript;
 		private int confidence;
@@ -30,5 +35,11 @@ public class SpeechDtoOut {
 		public void setConfidence(int confidence) {
 			this.confidence = confidence;
 		}
+		@Override
+		public String toString() {
+			return "SpeechRecognitionAlternative [transcript=" + transcript
+					+ ", confidence=" + confidence + "]";
+		}
+		
 	}
 }

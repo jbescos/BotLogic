@@ -4,10 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.codec.binary.Base64;
 
 public class SpeechDtoIn {
 
@@ -30,10 +29,15 @@ public class SpeechDtoIn {
 		this.audio = audio;
 	}
 
+	@Override
+	public String toString() {
+		return "SpeechDtoIn [config=" + config + ", audio=" + audio + "]";
+	}
+
 	public static class RecognitionConfig {
 		private String encoding = "FLAC";
-		private int sampleRate = 16000;
-		private String languageCode = "en-US";
+		private int sampleRate = 44100;
+		private String languageCode = "en-us";
 		private int maxAlternatives = 1;
 		private boolean profanityFilter = false;
 		private SpeechContext speechContext;
@@ -85,6 +89,16 @@ public class SpeechDtoIn {
 		public void setSpeechContext(SpeechContext speechContext) {
 			this.speechContext = speechContext;
 		}
+
+		@Override
+		public String toString() {
+			return "RecognitionConfig [encoding=" + encoding + ", sampleRate="
+					+ sampleRate + ", languageCode=" + languageCode
+					+ ", maxAlternatives=" + maxAlternatives
+					+ ", profanityFilter=" + profanityFilter
+					+ ", speechContext=" + speechContext + "]";
+		}
+		
 	}
 
 	public static class SpeechContext {
@@ -97,6 +111,12 @@ public class SpeechDtoIn {
 		public void setPhrases(List<String> phrases) {
 			this.phrases = phrases;
 		}
+
+		@Override
+		public String toString() {
+			return "SpeechContext [phrases=" + phrases + "]";
+		}
+		
 	}
 
 	public static class RecognitionAudio {
@@ -110,6 +130,13 @@ public class SpeechDtoIn {
 		public void setContent(String content) {
 			this.content = content;
 		}
+		
+
+		@Override
+		public String toString() {
+			return "RecognitionAudio [content=" + content + ", uri=" + uri
+					+ "]";
+		}
 
 		public String getUri() {
 			return uri;
@@ -120,15 +147,13 @@ public class SpeechDtoIn {
 		}
 
 		public static RecognitionAudio create(File file) throws FileNotFoundException, IOException {
-			byte[] encoded = new byte[0];
 			try (FileInputStream fin = new FileInputStream(file)) {
 				byte fileContent[] = new byte[(int) file.length()];
 				fin.read(fileContent);
-				encoded = Base64.encodeBase64(fileContent);
+				RecognitionAudio audio = new RecognitionAudio();
+				audio.setContent(Base64.getEncoder().encodeToString(fileContent));
+				return audio;
 			}
-			RecognitionAudio audio = new RecognitionAudio();
-			audio.setContent(new String(encoded));
-			return audio;
 		}
 	}
 }
