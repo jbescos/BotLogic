@@ -1,0 +1,8 @@
+com/botlogic/speech/SpeechDtoIn.class
+com/botlogic/speech/SpeechDtoIn$RecognitionConfig.class
+com/botlogic/speech/App.class
+com/botlogic/speech/SpeechDtoIn$RecognitionAudio.class
+com/botlogic/speech/SpeechDtoOut$SpeechRecognitionAlternative.class
+com/botlogic/speech/SpeechDtoOut.class
+com/botlogic/speech/SpeechDtoIn$SpeechContext.class
+com/botlogic/speech/SpeechSync.class

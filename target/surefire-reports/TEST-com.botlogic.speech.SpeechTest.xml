@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.botlogic.speech.SpeechTest" time="2.452" tests="1" errors="1" skipped="0" failures="0">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/amd64"/>
+    <property name="java.vm.version" value="25.101-b13"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/home/jorge/workspace/BotLogic"/>
+    <property name="java.runtime.version" value="1.8.0_101-b13"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-8-oracle/jre/lib/endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="os.name" value="Linux"/>
+    <property name="classworlds.conf" value="/usr/share/maven3/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="52.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="3.13.0-92-generic"/>
+    <property name="user.home" value="/home/jorge"/>
+    <property name="user.timezone" value="Europe/Madrid"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="user.name" value="jorge"/>
+    <property name="java.class.path" value="/usr/share/maven3/boot/plexus-classworlds-2.5.1.jar"/>
+    <property name="org.slf4j.simpleLogger.defaultLogLevel" value="info"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="/usr/lib/jvm/java-8-oracle/jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean install"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="en"/>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.8.0_101"/>
+    <property name="java.ext.dirs" value="/usr/lib/jvm/java-8-oracle/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="securerandom.source" value="file:/dev/./urandom"/>
+    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/resources.jar:/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar:/usr/lib/jvm/java-8-oracle/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jsse.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar:/usr/lib/jvm/java-8-oracle/jre/lib/charsets.jar:/usr/lib/jvm/java-8-oracle/jre/lib/jfr.jar:/usr/lib/jvm/java-8-oracle/jre/classes"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="/usr/share/maven3"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase name="test" classname="com.botlogic.speech.SpeechTest" time="2.451">
+    <error message="Errors in the request InboundJaxrsResponse{context=ClientResponse{method=POST, uri=https://speech.googleapis.com/v1beta1/speech:syncrecognize?key=AIzaSyAcHVG7M1W4tjeJNf3FzUdvLq9uT-XYHzc, status=400, reason=Bad Request}}" type="java.lang.IllegalAccessException">java.lang.IllegalAccessException: Errors in the request InboundJaxrsResponse{context=ClientResponse{method=POST, uri=https://speech.googleapis.com/v1beta1/speech:syncrecognize?key=AIzaSyAcHVG7M1W4tjeJNf3FzUdvLq9uT-XYHzc, status=400, reason=Bad Request}}
+	at com.botlogic.speech.SpeechTest.test(SpeechTest.java:32)
+</error>
+    <system-out><![CDATA[2016-08-14 17:10:07,362 main DEBUG Initializing configuration XmlConfiguration[location=/home/jorge/workspace/BotLogic/target/test-classes/log4j2.xml]
+2016-08-14 17:10:07,372 main DEBUG Installed script engines
+2016-08-14 17:10:08,007 main DEBUG Oracle Nashorn Version: 1.8.0_101, Language: ECMAScript, Threading: Not Thread Safe, Compile: true, Names: {nashorn, Nashorn, js, JS, JavaScript, javascript, ECMAScript, ecmascript}
+2016-08-14 17:10:08,008 main DEBUG PluginManager 'Core' found 99 plugins
+2016-08-14 17:10:08,009 main DEBUG PluginManager 'Level' found 0 plugins
+2016-08-14 17:10:08,014 main DEBUG No scheduled items
+2016-08-14 17:10:08,015 main DEBUG PluginManager 'Lookup' found 13 plugins
+2016-08-14 17:10:08,018 main DEBUG Building Plugin[name=layout, class=org.apache.logging.log4j.core.layout.PatternLayout].
+2016-08-14 17:10:08,034 main DEBUG PluginManager 'TypeConverter' found 23 plugins
+2016-08-14 17:10:08,063 main DEBUG PatternLayout$Builder(pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n", PatternSelector=null, Configuration(/home/jorge/workspace/BotLogic/target/test-classes/log4j2.xml), Replace=null, charset="null", alwaysWriteExceptions="null", noConsoleNoAnsi="null", header="null", footer="null")
+2016-08-14 17:10:08,064 main DEBUG PluginManager 'Converter' found 41 plugins
+2016-08-14 17:10:08,066 main DEBUG Building Plugin[name=appender, class=org.apache.logging.log4j.core.appender.ConsoleAppender].
+2016-08-14 17:10:08,068 main INFO Log4j appears to be running in a Servlet environment, but there's no log4j-web module available. If you want better web container support, please add the log4j-web JAR to your web archive or server lib directory.
+2016-08-14 17:10:08,070 main DEBUG PluginManager 'Converter' found 41 plugins
+2016-08-14 17:10:08,072 main DEBUG Starting OutputStreamManager SYSTEM_OUT.false.false-2
+2016-08-14 17:10:08,086 main DEBUG ConsoleAppender$Builder(PatternLayout(%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n), Filter=null, target="SYSTEM_OUT", name="Console", follow="null", direct="null", ignoreExceptions="null")
+2016-08-14 17:10:08,087 main DEBUG Starting OutputStreamManager SYSTEM_OUT.false.false
+2016-08-14 17:10:08,088 main DEBUG Building Plugin[name=appenders, class=org.apache.logging.log4j.core.config.AppendersPlugin].
+2016-08-14 17:10:08,092 main DEBUG createAppenders(={Console})
+2016-08-14 17:10:08,093 main DEBUG Building Plugin[name=AppenderRef, class=org.apache.logging.log4j.core.config.AppenderRef].
+2016-08-14 17:10:08,102 main DEBUG createAppenderRef(ref="Console", level="null", Filter=null)
+2016-08-14 17:10:08,103 main DEBUG Building Plugin[name=root, class=org.apache.logging.log4j.core.config.LoggerConfig$RootLogger].
+2016-08-14 17:10:08,106 main DEBUG createLogger(additivity="null", level="DEBUG", includeLocation="null", ={Console}, ={}, Configuration(/home/jorge/workspace/BotLogic/target/test-classes/log4j2.xml), Filter=null)
+2016-08-14 17:10:08,110 main DEBUG Building Plugin[name=loggers, class=org.apache.logging.log4j.core.config.LoggersPlugin].
+2016-08-14 17:10:08,111 main DEBUG createLoggers(={root})
+2016-08-14 17:10:08,113 main DEBUG Configuration XmlConfiguration[location=/home/jorge/workspace/BotLogic/target/test-classes/log4j2.xml] initialized
+2016-08-14 17:10:08,114 main DEBUG Starting configuration XmlConfiguration[location=/home/jorge/workspace/BotLogic/target/test-classes/log4j2.xml]
+2016-08-14 17:10:08,115 main DEBUG Started configuration XmlConfiguration[location=/home/jorge/workspace/BotLogic/target/test-classes/log4j2.xml] OK.
+2016-08-14 17:10:08,117 main DEBUG Shutting down OutputStreamManager SYSTEM_OUT.false.false-1
+2016-08-14 17:10:08,118 main DEBUG Stopped org.apache.logging.log4j.core.config.DefaultConfiguration@1e67b872 OK
+2016-08-14 17:10:08,220 main DEBUG Registering MBean org.apache.logging.log4j2:type=6bc7c054
+2016-08-14 17:10:08,225 main DEBUG Registering MBean org.apache.logging.log4j2:type=6bc7c054,component=StatusLogger
+2016-08-14 17:10:08,228 main DEBUG Registering MBean org.apache.logging.log4j2:type=6bc7c054,component=ContextSelector
+2016-08-14 17:10:08,231 main DEBUG Registering MBean org.apache.logging.log4j2:type=6bc7c054,component=Loggers,name=
+2016-08-14 17:10:08,234 main DEBUG Registering MBean org.apache.logging.log4j2:type=6bc7c054,component=Appenders,name=Console
+2016-08-14 17:10:08,240 main DEBUG Reconfiguration complete for context[name=6bc7c054] at URI /home/jorge/workspace/BotLogic/target/test-classes/log4j2.xml (org.apache.logging.log4j.core.LoggerContext@484970b0) with optional ClassLoader: null
+2016-08-14 17:10:08,240 main DEBUG Shutdown hook enabled. Registering a new one.
+2016-08-14 17:10:08,242 main DEBUG LoggerContext[name=6bc7c054, org.apache.logging.log4j.core.LoggerContext@484970b0] started OK.
+]]></system-out>
+  </testcase>
+</testsuite>

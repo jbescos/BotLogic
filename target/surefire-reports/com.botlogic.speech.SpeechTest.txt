@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.botlogic.speech.SpeechTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.452 sec <<< FAILURE! - in com.botlogic.speech.SpeechTest
+test(com.botlogic.speech.SpeechTest)  Time elapsed: 2.451 sec  <<< ERROR!
+java.lang.IllegalAccessException: Errors in the request InboundJaxrsResponse{context=ClientResponse{method=POST, uri=https://speech.googleapis.com/v1beta1/speech:syncrecognize?key=AIzaSyAcHVG7M1W4tjeJNf3FzUdvLq9uT-XYHzc, status=400, reason=Bad Request}}
+	at com.botlogic.speech.SpeechTest.test(SpeechTest.java:32)
+
