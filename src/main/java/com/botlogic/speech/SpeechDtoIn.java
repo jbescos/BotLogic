@@ -1,10 +1,8 @@
 package com.botlogic.speech;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,9 +33,10 @@ public class SpeechDtoIn {
 	}
 
 	public static class RecognitionConfig {
-		private String encoding = "FLAC";
-		private int sampleRate = 44100;
-		private String languageCode = "en-us";
+		private String encoding = "LINEAR16";
+		//private int sampleRate = 44100;
+		private int sampleRate = 16000;
+		private String languageCode = "en-US";
 		private int maxAlternatives = 1;
 		private boolean profanityFilter = false;
 		private SpeechContext speechContext;
@@ -147,13 +146,9 @@ public class SpeechDtoIn {
 		}
 
 		public static RecognitionAudio create(File file) throws FileNotFoundException, IOException {
-			try (FileInputStream fin = new FileInputStream(file)) {
-				byte fileContent[] = new byte[(int) file.length()];
-				fin.read(fileContent);
-				RecognitionAudio audio = new RecognitionAudio();
-				audio.setContent(Base64.getEncoder().encodeToString(fileContent));
-				return audio;
-			}
+			RecognitionAudio audio = new RecognitionAudio();
+			audio.setContent(AudioUtility.toString64(file));
+			return audio;
 		}
 	}
 }

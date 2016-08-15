@@ -1,11 +1,12 @@
 package com.botlogic.speech;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
@@ -24,9 +25,14 @@ public class SpeechTest {
 	}
 	
 	@Test
-	public void test() throws IllegalAccessException, FileNotFoundException, IOException, SpeechException{
-		String text = new SpeechSync(client).getFromFile(loadFile("good-morning-google.flac"));
-		assertEquals("This is a test", text);
+	public void test(){
+		try {
+			String text = new SpeechSync(client).obtainTextV1beta(loadFile("hello.wav"));
+			assertEquals("hello Google", text);
+		} catch (ProcessingException | IllegalAccessException | IOException | SpeechException e) {
+			log.error("Unexpected error", e);
+			fail(e.getMessage());
+		}
 	}
 	
 	private File loadFile(String fileName){

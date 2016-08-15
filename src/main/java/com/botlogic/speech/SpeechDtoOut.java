@@ -5,19 +5,37 @@ import java.util.List;
 
 public class SpeechDtoOut {
 
-	private List<SpeechRecognitionAlternative> alternatives = Collections.emptyList();
+	private List<Alternative> results = Collections.emptyList();
 	
-	public List<SpeechRecognitionAlternative> getAlternatives() {
-		return alternatives;
-	}
-
-	public void setAlternatives(List<SpeechRecognitionAlternative> alternatives) {
-		this.alternatives = alternatives;
-	}
-
 	@Override
 	public String toString() {
-		return "SpeechDtoOut [alternatives=" + alternatives + "]";
+		return "SpeechDtoOut [results=" + results + "]";
+	}
+
+	public List<Alternative> getResults() {
+		return results;
+	}
+
+	public void setResults(List<Alternative> results) {
+		this.results = results;
+	}
+
+	public static class Alternative {
+		private List<SpeechRecognitionAlternative> alternatives = Collections.emptyList();
+
+		public List<SpeechRecognitionAlternative> getAlternatives() {
+			return alternatives;
+		}
+
+		public void setAlternatives(List<SpeechRecognitionAlternative> alternatives) {
+			this.alternatives = alternatives;
+		}
+
+		@Override
+		public String toString() {
+			return "Alternative [alternatives=" + alternatives + "]";
+		}
+		
 	}
 
 	public static class SpeechRecognitionAlternative {
