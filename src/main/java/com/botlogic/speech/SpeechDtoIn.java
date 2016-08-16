@@ -38,7 +38,7 @@ public class SpeechDtoIn {
 		private String encoding = "LINEAR16";
 		//private int sampleRate = 44100;
 		private int sampleRate = (int) AudioRecorder.SAMPLE_RATE;
-		private String languageCode = "en-US";
+		private String languageCode = Languages.EN_US;
 		private int maxAlternatives = 1;
 		private boolean profanityFilter = false;
 		private SpeechContext speechContext;

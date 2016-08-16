@@ -27,9 +27,11 @@ public class SpeechSync {
 		this.client = client;
 	}
 	
-	public String obtainTextV1beta(File file) throws IllegalAccessException, FileNotFoundException, IOException, SpeechException{
+	public String obtainTextV1beta(File file, String languageCode) throws IllegalAccessException, FileNotFoundException, IOException, SpeechException{
 		SpeechDtoIn in = new SpeechDtoIn();
-		in.setConfig(new RecognitionConfig());
+		RecognitionConfig config = new RecognitionConfig();
+		config.setLanguageCode(languageCode);
+		in.setConfig(config);
 		in.setAudio(RecognitionAudio.create(file));
 		log.debug("Sending: "+in);
 		Response response = client.target(bundle.getString("speech.url.v1beta")).queryParam("key", bundle.getString("speech.key")).request().post(Entity.entity(in, MediaType.APPLICATION_JSON_TYPE));

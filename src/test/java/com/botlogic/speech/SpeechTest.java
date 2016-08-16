@@ -32,7 +32,7 @@ public class SpeechTest {
 	@Ignore
 	public void audioToText(){
 		try {
-			String text = new SpeechSync(client).obtainTextV1beta(loadFile("test.wav"));
+			String text = new SpeechSync(client).obtainTextV1beta(loadFile("test.wav"), Languages.EN_US);
 			assertEquals("this is a test let's see", text);
 		} catch (ProcessingException | IllegalAccessException | IOException | SpeechException e) {
 			log.error("Unexpected error", e);
@@ -45,7 +45,7 @@ public class SpeechTest {
 		File file = File.createTempFile("test", ".wav");
 		AudioRecorder audio = AudioRecorder.create(file, 5);
 		audio.record();
-		String text = new SpeechSync(client).obtainTextV1beta(file);
+		String text = new SpeechSync(client).obtainTextV1beta(file, Languages.ES_ES);
 		log.info(text);
 	}
 	

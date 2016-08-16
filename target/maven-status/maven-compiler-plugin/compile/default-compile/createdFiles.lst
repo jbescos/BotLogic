@@ -1,5 +1,6 @@
 com/botlogic/speech/SpeechDtoIn.class
 com/botlogic/speech/SpeechException.class
+com/botlogic/speech/Languages.class
 com/botlogic/speech/SpeechDtoIn$RecognitionAudio.class
 com/botlogic/speech/SpeechDtoOut$SpeechRecognitionAlternative.class
 com/botlogic/speech/SpeechDtoOut.class
