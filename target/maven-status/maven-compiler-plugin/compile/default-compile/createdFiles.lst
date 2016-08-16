@@ -7,5 +7,6 @@ com/botlogic/speech/SpeechSync.class
 com/botlogic/speech/SpeechDtoOut$Alternative.class
 com/botlogic/speech/SpeechDtoIn$RecognitionConfig.class
 com/botlogic/speech/App.class
+com/botlogic/audio/AudioRecorder.class
 com/botlogic/speech/SpeechDtoIn$SpeechContext.class
 com/botlogic/speech/AudioUtility.class
