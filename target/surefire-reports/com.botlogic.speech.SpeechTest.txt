@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.botlogic.speech.SpeechTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 15.626 sec - in com.botlogic.speech.SpeechTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 2, Time elapsed: 0.083 sec - in com.botlogic.speech.SpeechTest

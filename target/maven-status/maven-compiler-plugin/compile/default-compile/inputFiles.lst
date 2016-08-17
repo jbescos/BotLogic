@@ -5,4 +5,5 @@
 /home/jorge/workspace/BotLogic/src/main/java/com/botlogic/audio/AudioRecorder.java
 /home/jorge/workspace/BotLogic/src/main/java/com/botlogic/speech/SpeechDtoOut.java
 /home/jorge/workspace/BotLogic/src/main/java/com/botlogic/speech/SpeechSync.java
+/home/jorge/workspace/BotLogic/src/main/java/com/botlogic/analyzer/TextAnalyzer.java
 /home/jorge/workspace/BotLogic/src/main/java/com/botlogic/speech/SpeechException.java

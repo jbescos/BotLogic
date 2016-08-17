@@ -41,6 +41,7 @@ public class SpeechTest {
 	}
 	
 	@Test
+	@Ignore
 	public void microToText() throws IOException, LineUnavailableException, IllegalAccessException, SpeechException{
 		File file = File.createTempFile("test", ".wav");
 		AudioRecorder audio = AudioRecorder.create(file, 5);
