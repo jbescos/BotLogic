@@ -2,6 +2,8 @@ package com.botlogic.analyzer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import opennlp.tools.chunker.ChunkerME;
 import opennlp.tools.chunker.ChunkerModel;
@@ -54,6 +56,23 @@ public class TextAnalyzer {
 			ParserModel model = new ParserModel(modelIn);
 			Parser parser = ParserFactory.create(model);
 			return ParserTool.parseLine(sentence, parser, 1);
+		}
+	}
+	
+	public List<WordContent> parseSentence(String sentence) throws InvalidFormatException, IOException{
+		List<WordContent> words = new ArrayList<>();
+		Parse[] parse = parse(sentence);
+		createWords(words, parse);
+		return words;
+	}
+	
+	private void createWords(List<WordContent> words, Parse ... parse){
+		for(Parse p : parse){
+			if(p.getChildCount() == 0){
+				Parse parent = p.getParent();
+				words.add(new WordContent(parent.getCoveredText(), parent.getType(), parent.getSpan().getStart(), parent.getSpan().getEnd(), parent.getSpan().getProb()));
+			}
+			createWords(words, p.getChildren());
 		}
 	}
 	

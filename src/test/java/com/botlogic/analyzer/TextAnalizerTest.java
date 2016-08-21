@@ -4,12 +4,18 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
+import opennlp.tools.util.InvalidFormatException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 public class TextAnalizerTest {
 
 	private final TextAnalyzer analyzer = new TextAnalyzer();
+	private final static Logger log = LogManager.getLogger();
 	
 	@Test
 	public void sentences() throws FileNotFoundException, IOException{
@@ -21,6 +27,12 @@ public class TextAnalizerTest {
 		assertEquals(SENTENCE_1.trim(), sentences[0]);
 		assertEquals(SENTENCE_2.trim(), sentences[1]);
 		assertEquals(SENTENCE_3.trim(), sentences[2]);
+	}
+	
+	@Test
+	public void chunk() throws InvalidFormatException, IOException{
+		List<WordContent> words = analyzer.parseSentence("I try to understand how does it work but it looks very difficult.");
+		assertEquals(13, words.size());
 	}
 	
 }
