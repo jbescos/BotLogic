@@ -1,8 +1,8 @@
 *.class
 *.log
 
-target/**/*.*
-
+target/*
+temp*
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

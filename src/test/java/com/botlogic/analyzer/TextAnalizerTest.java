@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import opennlp.tools.util.InvalidFormatException;
 
@@ -31,8 +32,20 @@ public class TextAnalizerTest {
 	
 	@Test
 	public void chunk() throws InvalidFormatException, IOException{
-		List<WordContent> words = analyzer.parseSentence("I try to understand how does it work but it looks very difficult.");
-		assertEquals(13, words.size());
+		List<WordContent> words = analyzer.parseSentence("What time is it?");
+		assertEquals(words.toString(), 4, words.size());
+		debugWords(words);
+		words = analyzer.parseSentence("Move to the right");
+		debugWords(words);
+		words = analyzer.parseSentence("Switch on the pin number 8");
+		debugWords(words);
+		words = analyzer.parseSentence("How was the score of the last futbol match?");
+		debugWords(words);
+	}
+	
+	private void debugWords(List<WordContent> words){
+		List<String> print = words.stream().map(w->w.getWord()+"("+w.getTag()+")").collect(Collectors.toList());
+		log.debug(print);
 	}
 	
 }

@@ -39,5 +39,11 @@ public class WordContent {
 	public String getTag() {
 		return tag;
 	}
+
+	@Override
+	public String toString() {
+		return "WordContent [word=" + word + ", tag=" + tag + ", start="
+				+ start + ", end=" + end + ", probability=" + probability + "]";
+	}
 	
 }
