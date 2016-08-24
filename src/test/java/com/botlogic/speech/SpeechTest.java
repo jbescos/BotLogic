@@ -18,6 +18,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.botlogic.audio.AudioRecorder;
+import com.botlogic.utils.FileUtils;
 
 public class SpeechTest {
 	
@@ -32,7 +33,7 @@ public class SpeechTest {
 	@Ignore
 	public void audioToText(){
 		try {
-			String text = new SpeechSync(client).obtainTextV1beta(loadFile("test.wav"), Languages.EN_US);
+			String text = new SpeechSync(client).obtainTextV1beta(FileUtils.loadFileFromClasspath("test.wav"), Languages.EN_US);
 			assertEquals("this is a test let's see", text);
 		} catch (ProcessingException | IllegalAccessException | IOException | SpeechException e) {
 			log.error("Unexpected error", e);
@@ -48,11 +49,6 @@ public class SpeechTest {
 		audio.record();
 		String text = new SpeechSync(client).obtainTextV1beta(file, Languages.ES_ES);
 		log.info(text);
-	}
-	
-	private File loadFile(String fileName){
-		File file = new File(getClass().getClassLoader().getResource(fileName).getFile());
-		return file;
 	}
 	
 }
