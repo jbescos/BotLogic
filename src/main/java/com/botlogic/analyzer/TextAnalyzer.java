@@ -1,10 +1,14 @@
 package com.botlogic.analyzer;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -134,6 +138,27 @@ public class TextAnalyzer {
 	       DoccatFactory factory = new DoccatFactory(WhitespaceTokenizer.INSTANCE, null);
 	       DoccatModel model = DocumentCategorizerME.train("en", sampleStream, parameters, factory);
 	       model.serialize(modelOut);  
+		}
+	}
+	
+	public void makeTrainingFile(File currentFile, BufferedWriter bw) throws FileNotFoundException, IOException{
+		if(!currentFile.isDirectory()){
+			String category = currentFile.getParentFile().getName();
+			try(InputStream input = new FileInputStream(currentFile); BufferedReader reader = new BufferedReader(new InputStreamReader(input));){
+				String line = reader.readLine();
+				while(line != null){
+					if(line.matches(".*[a-zA-Z]+.*")){
+						bw.write(category+" "+line);
+						bw.newLine();
+					}
+					line = reader.readLine();
+				}
+			}
+		}else{
+			log.debug("Category "+currentFile.getName());
+			for(File children : currentFile.listFiles()){
+				makeTrainingFile(children, bw);
+			}
 		}
 	}
 }

@@ -1,4 +1,4 @@
-search_time What time is it?
-search_location Where is Zaragoza?
-order_movement Move forward 5 meters
-order_movement Rotate 5 degrees left
+search.time What time is it?
+search.location Where is Zaragoza?
+order.movement Move forward 5 meters
+order.movement Rotate 5 degrees left

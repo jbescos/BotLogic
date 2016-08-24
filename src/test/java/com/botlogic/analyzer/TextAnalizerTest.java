@@ -3,9 +3,13 @@ package com.botlogic.analyzer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +28,7 @@ public class TextAnalizerTest {
 	private final static Logger log = LogManager.getLogger();
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void sentences() throws FileNotFoundException, IOException{
 		final String SENTENCE_1 = "Hello this is a test. ";
 		final String SENTENCE_2 = "Hello this is other test. ";
@@ -37,7 +41,7 @@ public class TextAnalizerTest {
 	}
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void chunk() throws InvalidFormatException, IOException{
 		List<WordContent> words = analyzer.parseSentence("What time is it?");
 		assertEquals(words.toString(), 4, words.size());
@@ -56,15 +60,27 @@ public class TextAnalizerTest {
 	}
 	
 	@Test
+//	@Ignore
 	public void categorize() throws IOException{
 		try{
-			File fileModel = File.createTempFile("training", ".bin");
-			analyzer.trainCategorizer(FileUtils.loadFileFromClasspath("training.txt"), fileModel);
-			String category = analyzer.categorize("I'm looking for Zaragoza", fileModel);
-			assertEquals("search_location", category);
+			File fileModel = FileUtils.loadFileFromClasspath("newspapers.bin");
+//			File fileModel = File.createTempFile("training", ".bin");
+//			analyzer.trainCategorizer(FileUtils.loadFileFromClasspath("newspapers6517598969977471588.train"), fileModel);
+			String category = analyzer.categorize("I would like to buy a motorcycle, where can I buy one?", fileModel);
+			assertEquals("rec.motorcycles", category);
 		}catch(Exception e){
 			log.error("Error doing categorize", e);
 			fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	@Ignore
+	public void createTrainingText() throws FileNotFoundException, IOException{
+		File currentFile = new File("/home/jorge/Downloads/20news-bydate/20news-bydate-train/");
+		File trainingText = File.createTempFile("newspapers", ".train");
+		try(OutputStream fos = new FileOutputStream(trainingText); BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));){
+			analyzer.makeTrainingFile(currentFile, bw);
 		}
 	}
 	
