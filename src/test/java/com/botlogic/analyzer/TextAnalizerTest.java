@@ -87,6 +87,7 @@ public class TextAnalizerTest {
 	}
 	
 	@Test
+	@Ignore
 	public void training() throws IOException{
 		File trainingFile = FileUtils.loadFileFromClasspath("training.txt");
 		File fileModel = File.createTempFile("training", ".bin");

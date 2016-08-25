@@ -1,8 +1,9 @@
 search.time What time is it?
+search.time Now its 14:00 here. One hour later in Canary Islands.
 search.time What is the time now in Japan?
 search.meaning What is the meaning of machine learning?
 search.location Where is Zaragoza?
-search.location Where is the closest bar from here?
+search.location Where is the closest pub from here?
 order.movement Move forward 5 meters
 order.movement Rotate 5 degrees left
 order.movement Turn right
