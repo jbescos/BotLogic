@@ -20,6 +20,7 @@ import opennlp.tools.doccat.DoccatModel;
 import opennlp.tools.doccat.DocumentCategorizerME;
 import opennlp.tools.doccat.DocumentSample;
 import opennlp.tools.doccat.DocumentSampleStream;
+import opennlp.tools.ml.AbstractTrainer;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.postag.POSModel;
@@ -102,6 +103,7 @@ public class TextAnalyzer {
 			DoccatModel model = new DoccatModel(modelIn);
 			DocumentCategorizerME myCategorizer = new DocumentCategorizerME(model);
 			double[] outcomes = myCategorizer.categorize(text);
+			log.debug(myCategorizer.sortedScoreMap(text).toString());
 			return myCategorizer.getBestCategory(outcomes);
 		}
 	}
@@ -112,7 +114,7 @@ public class TextAnalyzer {
 	       ObjectStream<String> lineStream = new PlainTextByLineStream(new MarkableFileInputStreamFactory(trainingFile), "UTF-8");
 	       ObjectStream<DocumentSample> sampleStream = new DocumentSampleStream(lineStream);
 	       TrainingParameters parameters = new TrainingParameters();
-//	       parameters.put(AbstractTrainer.CUTOFF_PARAM, "1");
+	       parameters.put(AbstractTrainer.CUTOFF_PARAM, "1");
 	       DoccatFactory factory = new DoccatFactory(WhitespaceTokenizer.INSTANCE, null);
 	       DoccatModel model = DocumentCategorizerME.train("en", sampleStream, parameters, factory);
 	       model.serialize(modelOut);  

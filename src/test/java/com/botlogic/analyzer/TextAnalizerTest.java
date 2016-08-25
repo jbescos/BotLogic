@@ -62,7 +62,7 @@ public class TextAnalizerTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void categorize() throws IOException{
 		try{
 			File fileModel = FileUtils.loadFileFromClasspath("newspapers.bin");
@@ -84,6 +84,22 @@ public class TextAnalizerTest {
 		try(OutputStream fos = new FileOutputStream(trainingText); BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));){
 			analyzer.makeTrainingFile(currentFile, bw);
 		}
+	}
+	
+	@Test
+	public void training() throws IOException{
+		File trainingFile = FileUtils.loadFileFromClasspath("training.txt");
+		File fileModel = File.createTempFile("training", ".bin");
+		analyzer.trainCategorizer(trainingFile, fileModel);
+		expectCategory("order.movement", "Go forward 100 meters", fileModel);
+		expectCategory("order.movement", "Turn back 180 degrees", fileModel);
+		expectCategory("order.movement", "Move to the ther room", fileModel);
+		expectCategory("search.location", "Where is Roma?", fileModel);
+	}
+	
+	private void expectCategory(String expectedCategory, String text, File fileModel) throws IOException{
+		String category = analyzer.categorize(text, fileModel);
+		assertEquals(expectedCategory, category);
 	}
 	
 }
