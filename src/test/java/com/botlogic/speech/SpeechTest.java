@@ -17,6 +17,7 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.botlogic.analyzer.TextAnalyzer;
 import com.botlogic.audio.AudioRecorder;
 import com.botlogic.utils.FileUtils;
 
@@ -45,10 +46,13 @@ public class SpeechTest {
 	@Ignore
 	public void microToText() throws IOException, LineUnavailableException, IllegalAccessException, SpeechException{
 		File file = File.createTempFile("test", ".wav");
-		AudioRecorder audio = AudioRecorder.create(file, 5);
+		AudioRecorder audio = AudioRecorder.create(file, 10);
 		audio.record();
-		String text = new SpeechSync(client).obtainTextV1beta(file, Languages.ES_ES);
+		String text = new SpeechSync(client).obtainTextV1beta(file, Languages.EN_US);
 		log.info(text);
+		TextAnalyzer analyzer = new TextAnalyzer();
+		String category = analyzer.categorize(text, FileUtils.loadFileFromClasspath("newspapers.bin"));
+		log.info(text+"\n Belongs to category: "+category);
 	}
 	
 }

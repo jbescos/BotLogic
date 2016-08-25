@@ -43,20 +43,22 @@ public class TextAnalizerTest {
 	@Test
 //	@Ignore
 	public void chunk() throws InvalidFormatException, IOException{
-		List<WordContent> words = analyzer.parseSentence("What time is it?");
-		assertEquals(words.toString(), 4, words.size());
-		debugWords(words);
-		words = analyzer.parseSentence("Move to the right");
-		debugWords(words);
-		words = analyzer.parseSentence("Switch on the pin number 8");
-		debugWords(words);
-		words = analyzer.parseSentence("How was the score of the last futbol match?");
-		debugWords(words);
+		List<WordContent> words = analyzer.posTagger("What time is it?");
+		assertEquals(words.toString(), 5, words.size());
+		tagAndDebug("Move to the right");
+		tagAndDebug("Switch on the pin number 8");
+		tagAndDebug("How was the score of the last futbol match?");
 	}
 	
-	private void debugWords(List<WordContent> words){
+	private void tagAndDebug(String sentence) throws InvalidFormatException, IOException{
+		long time1 = System.currentTimeMillis();
+		List<WordContent> words = analyzer.posTagger(sentence);
+		debugWords(words, time1, "Tagger ");
+	}
+	
+	private void debugWords(List<WordContent> words, long time, String analyzer){
 		List<String> print = words.stream().map(w->w.getWord()+"("+w.getTag()+")").collect(Collectors.toList());
-		log.debug(print);
+		log.debug(analyzer+(System.currentTimeMillis() - time)+" millis: "+print);
 	}
 	
 	@Test
