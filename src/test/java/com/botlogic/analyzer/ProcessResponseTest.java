@@ -27,15 +27,18 @@ public class ProcessResponseTest {
 	
 	@Test
 	public void outputs() throws IOException{
-		verifyOutputs(InstructionStrategyFactory.SEARCH_TIME, "What time is it?");
-		verifyOutputs(InstructionStrategyFactory.SEARCH_TIME, "Hello I'm intersested in knowing the time, can you tell it to me please?.");
+		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Move forward 1 meter");
+		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Open the browser");
+		verifyOutputs(InstructionStrategyFactory.QUESTION_TIME, "What time is it?");
+		verifyOutputs(InstructionStrategyFactory.QUESTION_TIME, "Is it noon?.");
+		
 	}
 	
 	private void verifyOutputs(String category, String sentence) throws IOException{
 		List<DtoOut<?>> response = process.process(sentence);
 		log.debug("Response: "+response);
 		assertEquals(1, response.size());
-		assertEquals(category, response.get(0).getCategory());
+		assertEquals("Category: "+category+" Sentence: "+sentence, category, response.get(0).getCategory());
 	}
 	
 }

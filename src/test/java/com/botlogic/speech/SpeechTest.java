@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.ws.rs.ProcessingException;
@@ -51,8 +52,8 @@ public class SpeechTest {
 		String text = new SpeechSync(client).obtainTextV1beta(file, Languages.EN_US);
 		log.info(text);
 		TextAnalyzer analyzer = new TextAnalyzer();
-		String category = analyzer.categorize(text, FileUtils.loadFileFromClasspath("newspapers.bin"));
-		log.info(text+"\n Belongs to category: "+category);
+		Entry<Double,String> pair = analyzer.categorize(text, FileUtils.loadFileFromClasspath("newspapers.bin"));
+		log.info(text+"\n Belongs to category: "+pair.getValue());
 	}
 	
 }

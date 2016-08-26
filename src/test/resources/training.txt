@@ -1,13 +1,18 @@
-search.time What time is it?
-search.time Now its 14:00 here. One hour later in Canary Islands.
-search.time What is the time now in Japan?
-search.meaning What is the meaning of machine learning?
-search.location Where is Zaragoza?
-search.location Where is the closest pub from here?
+question.time What time is it?
+question.time How many hours left to noon?
+question.time Is it time to lunch?
+question.time What is the time now in Japan?
+question.meaning What is the meaning of machine learning?
+question.location Where is Zaragoza?
+question.location Where is the closest pub from here?
+question.location Where is the milk?
 order.movement Move forward 5 meters
 order.movement Rotate 5 degrees left
 order.movement Turn right
+order.movement Jump and loop in the air
 order.execute Switch on the pin number 5
 order.execute Lights on
 order.execute Open the browser Firefox
 order.execute Switch off the machine
+order.execute Run command exec sh
+order.execute Install the application with apt-get

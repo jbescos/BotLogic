@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import opennlp.tools.util.InvalidFormatException;
@@ -68,8 +69,8 @@ public class TextAnalizerTest {
 			File fileModel = FileUtils.loadFileFromClasspath("newspapers.bin");
 //			File fileModel = File.createTempFile("training", ".bin");
 //			analyzer.trainCategorizer(FileUtils.loadFileFromClasspath("newspapers6517598969977471588.train"), fileModel);
-			String category = analyzer.categorize("I would like to buy a motorcycle, where can I buy one?", fileModel);
-			assertEquals("rec.motorcycles", category);
+			Entry<Double, String> pair = analyzer.categorize("I would like to buy a motorcycle, where can I buy one?", fileModel);
+			assertEquals("rec.motorcycles", pair.getValue());
 		}catch(Exception e){
 			log.error("Error doing categorize", e);
 			fail(e.getMessage());
@@ -99,8 +100,8 @@ public class TextAnalizerTest {
 	}
 	
 	private void expectCategory(String expectedCategory, String text, File fileModel) throws IOException{
-		String category = analyzer.categorize(text, fileModel);
-		assertEquals(expectedCategory, category);
+		Entry<Double, String> pair = analyzer.categorize(text, fileModel);
+		assertEquals(expectedCategory, pair.getValue());
 	}
 	
 }

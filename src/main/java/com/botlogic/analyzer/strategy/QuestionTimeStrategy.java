@@ -7,7 +7,7 @@ import java.util.List;
 import com.botlogic.analyzer.TextAnalyzer;
 import com.botlogic.analyzer.WordContent;
 
-public class SearchTimeStrategy implements InstructionStrategy<Date>{
+public class QuestionTimeStrategy implements InstructionStrategy<Date>{
 
 	@Override
 	public Date createInstruction(TextAnalyzer analyzer, String sentence) throws IOException{

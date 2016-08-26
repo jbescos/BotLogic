@@ -4,7 +4,15 @@ public class DtoOut<T> {
 
 	private String sentence;
 	private String category;
+	private Double probability;
 	private T instruction;
+	
+	public Double getProbability() {
+		return probability;
+	}
+	public void setProbability(Double probability) {
+		this.probability = probability;
+	}
 	public String getSentence() {
 		return sentence;
 	}
@@ -26,6 +34,7 @@ public class DtoOut<T> {
 	@Override
 	public String toString() {
 		return "DtoOut [sentence=" + sentence + ", category=" + category
-				+ ", instruction=" + instruction + "]";
+				+ ", probability=" + probability + ", instruction="
+				+ instruction + "]";
 	}
 }

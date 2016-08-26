@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,11 +27,12 @@ public class ProcessResponse {
 		List<DtoOut<?>> response = new ArrayList<>();
 		String[] sentences = analyzer.splitSentences(text);
 		for(String sentence : sentences){
-			String category = analyzer.categorize(text, categorizeModel);
-			InstructionStrategy<?> strategy = InstructionStrategyFactory.create(category);
+			Entry<Double,String> entry = analyzer.categorize(text, categorizeModel);
 			DtoOut<Object> dto = new DtoOut<>();
-			dto.setCategory(category);
+			dto.setProbability(entry.getKey());
 			dto.setSentence(sentence);
+			InstructionStrategy<?> strategy = InstructionStrategyFactory.create(entry);
+			dto.setCategory(entry.getValue());
 			dto.setInstruction(strategy.createInstruction(analyzer, sentence));
 			response.add(dto);
 		}

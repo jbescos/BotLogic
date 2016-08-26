@@ -10,8 +10,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
 
 import opennlp.tools.chunker.ChunkerME;
 import opennlp.tools.chunker.ChunkerModel;
@@ -98,13 +102,16 @@ public class TextAnalyzer {
 		}
 	}
 
-	public String categorize(String text, File readFileModel) throws IOException {
+	public Map.Entry<Double,String> categorize(String text, File readFileModel) throws IOException {
 		try (InputStream modelIn = new FileInputStream(readFileModel)) {
 			DoccatModel model = new DoccatModel(modelIn);
 			DocumentCategorizerME myCategorizer = new DocumentCategorizerME(model);
-			double[] outcomes = myCategorizer.categorize(text);
-			log.debug(myCategorizer.sortedScoreMap(text).toString());
-			return myCategorizer.getBestCategory(outcomes);
+			SortedMap<Double, Set<String>> map = myCategorizer.sortedScoreMap(text);
+			log.debug(map.toString());
+			double probability = map.lastKey();
+			String category = map.get(probability).iterator().next();
+			Map.Entry<Double,String> pair = new AbstractMap.SimpleImmutableEntry<>(probability, category);
+			return pair;
 		}
 	}
 
