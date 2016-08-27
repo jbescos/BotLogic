@@ -31,10 +31,10 @@ import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.sentdetect.SentenceDetectorME;
 import opennlp.tools.sentdetect.SentenceModel;
+import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
-import opennlp.tools.tokenize.WhitespaceTokenizer;
 import opennlp.tools.util.InvalidFormatException;
 import opennlp.tools.util.MarkableFileInputStreamFactory;
 import opennlp.tools.util.ObjectStream;
@@ -122,7 +122,7 @@ public class TextAnalyzer {
 	       ObjectStream<DocumentSample> sampleStream = new DocumentSampleStream(lineStream);
 	       TrainingParameters parameters = new TrainingParameters();
 	       parameters.put(AbstractTrainer.CUTOFF_PARAM, "1");
-	       DoccatFactory factory = new DoccatFactory(WhitespaceTokenizer.INSTANCE, null);
+	       DoccatFactory factory = new DoccatFactory(SimpleTokenizer.INSTANCE, null);
 	       DoccatModel model = DocumentCategorizerME.train("en", sampleStream, parameters, factory);
 	       model.serialize(modelOut);  
 		}

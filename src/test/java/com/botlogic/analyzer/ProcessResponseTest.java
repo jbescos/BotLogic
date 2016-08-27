@@ -27,7 +27,7 @@ public class ProcessResponseTest {
 	
 	@Test
 	public void outputs() throws IOException{
-		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Move forward 1 meter");
+		verifyOutputs(InstructionStrategyFactory.ORDER_MOVEMENT, "Move forward 1 meter");
 		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Open the browser");
 		verifyOutputs(InstructionStrategyFactory.QUESTION_TIME, "What time is it?");
 		verifyOutputs(InstructionStrategyFactory.QUESTION_TIME, "Is it noon?.");
