@@ -9,6 +9,7 @@ question.location Where is the milk?
 order.movement Move forward 5 meters
 order.movement Rotate 5 degrees left
 order.movement Turn right
+order.movement Rotate to the left 50 degrees
 order.movement Jump and loop in the air
 order.execute Switch on the pin number 5
 order.execute Lights on
@@ -16,3 +17,5 @@ order.execute Open the browser Firefox
 order.execute Switch off the machine
 order.execute Run command exec sh
 order.execute Install the application with apt-get
+order.execute Set the date to 14:00
+order.execute Update the text file

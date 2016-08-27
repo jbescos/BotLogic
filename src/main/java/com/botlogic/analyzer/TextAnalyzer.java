@@ -69,6 +69,7 @@ public class TextAnalyzer {
 				WordContent content = new WordContent(words[i], tags[i]);
 				contents.add(content);
 			}
+			log.debug(contents.toString());
 			return contents;
 		}
 	}

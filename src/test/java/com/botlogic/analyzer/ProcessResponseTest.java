@@ -28,17 +28,21 @@ public class ProcessResponseTest {
 	@Test
 	public void outputs() throws IOException{
 		verifyOutputs(InstructionStrategyFactory.ORDER_MOVEMENT, "Move forward 1 meter");
+		verifyOutputs(InstructionStrategyFactory.ORDER_MOVEMENT, "Turn 50 degrees to the left");
 		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Open the browser");
+		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Run this: apt-get update");
+		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Update the time to 11:00");
 		verifyOutputs(InstructionStrategyFactory.QUESTION_TIME, "What time is it?");
 		verifyOutputs(InstructionStrategyFactory.QUESTION_TIME, "Is it noon?.");
 		
 	}
 	
-	private void verifyOutputs(String category, String sentence) throws IOException{
+	private List<DtoOut<?>> verifyOutputs(String category, String sentence) throws IOException{
 		List<DtoOut<?>> response = process.process(sentence);
 		log.debug("Response: "+response);
 		assertEquals(1, response.size());
 		assertEquals("Category: "+category+" Sentence: "+sentence, category, response.get(0).getCategory());
+		return response;
 	}
 	
 }
