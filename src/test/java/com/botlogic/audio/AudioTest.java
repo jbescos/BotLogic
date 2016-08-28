@@ -19,16 +19,17 @@ public class AudioTest {
 	
 	@Test
 	@Ignore
-	public void run() throws LineUnavailableException, InterruptedException, IOException{
-		AudioRecorder audio = AudioRecorder.create(File.createTempFile("test", ".wav"), 5000, file -> {});
-		AudioRecorder.printInfo();
-		audio.record();
+	public void run() throws Exception{
+		try(AudioRecorder audio = AudioRecorder.create(File.createTempFile("test", ".wav"), 5000, file -> {})){
+			AudioRecorder.printInfo();
+			audio.record();
+		}
 	}
 	
 	@Test
-	public void runForever(){
-		try {
-			Runnable audio = AudioRecorder.create(File.createTempFile("sequence", ".wav"), 1000, file -> copyFile(file));
+//	@Ignore
+	public void runForever() throws Exception{
+		try(AudioRecorder audio = AudioRecorder.create(File.createTempFile("sequence", ".wav"), 1000, file -> copyFile(file))) {
 			audio.run();
 		} catch (LineUnavailableException | IOException e) {
 			log.error("Unexpected error",  e);

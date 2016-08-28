@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 
 
 
-public class AudioRecorder implements Runnable {
+public class AudioRecorder implements Runnable, AutoCloseable {
 
 	private final static Logger log = LogManager.getLogger();
 	private final static AudioFileFormat.Type FILE_TYPE = AudioFileFormat.Type.WAVE;
@@ -40,12 +40,15 @@ public class AudioRecorder implements Runnable {
 	private final AudioFileListener listener;
 	private final long FREQUENCY_CHUNK = 100;
 	private final int HEAD_WAV_BYTES = 52;
+	private final AudioInputStream ais;
 	
 	private AudioRecorder(File dest, long millisChunkRecording, AudioFileListener listener) throws LineUnavailableException{
 		this.microphone = AudioSystem.getTargetDataLine(format);
 		this.dest = dest;
 		this.millisChunkRecording = millisChunkRecording;
 		this.listener = listener;
+		this.ais = new AudioInputStream(microphone);
+		this.microphone.open(format);
 	}
 	
 	private int getAvgVolume(byte[] audioData){
@@ -64,35 +67,27 @@ public class AudioRecorder implements Runnable {
 	}
 	
 	public void record() throws LineUnavailableException, IOException{
-		record((ais) -> AudioSystem.write(ais, FILE_TYPE, dest));
+		record(dest);
 	}
 	
-	private void record(ThrowingConsumer<AudioInputStream> consume) throws LineUnavailableException, IOException{
-		try(AudioInputStream ais = new AudioInputStream(microphone)){
-			microphone.open(format);
-			microphone.start();
-			Executor executor = Executors.newSingleThreadExecutor();
-			executor.execute(()-> {
-				try {
-					long max = (millisChunkRecording/FREQUENCY_CHUNK)-1;
-					for(long i=max;i>=0;i--){
-						Thread.sleep(FREQUENCY_CHUNK);
-					}
-				} catch (Exception e) {
-					log.error("Timeout", e);
-				} finally {
-					stop();
+	private void record(File newAudio) throws LineUnavailableException, IOException{
+		microphone.start();
+		Executor executor = Executors.newSingleThreadExecutor();
+		executor.execute(()-> {
+			try {
+				long max = (millisChunkRecording/FREQUENCY_CHUNK)-1;
+				for(long i=max;i>=0;i--){
+					Thread.sleep(FREQUENCY_CHUNK);
 				}
-			});
-			log.info("Microphone openned");
-			consume.acceptThrows(ais);
-		}
-	}
-	
-	private void stop(){
-		microphone.stop();
-		microphone.close();
-		log.info("Microphone closed");
+			} catch (Exception e) {
+				log.error("Timeout", e);
+			} finally {
+				microphone.stop();
+			}
+		});
+		log.info("Microphone start");
+		AudioSystem.write(ais, FILE_TYPE, newAudio);
+		microphone.flush();
 	}
 
 	public static void printInfo() throws LineUnavailableException {
@@ -136,7 +131,7 @@ public class AudioRecorder implements Runnable {
 			dest.delete();
 			while(running){
 				final File newAudio = File.createTempFile("audio_recorder_chunk", ".wav");
-				record((ais) -> AudioSystem.write(ais, FILE_TYPE, newAudio));
+				record(newAudio);
 				byte[] chunk = FileUtils.readFileToByteArray(newAudio);
 				double volume = getAvgVolume(chunk);
 				if(isWantedAudio(volume)){
@@ -164,11 +159,12 @@ public class AudioRecorder implements Runnable {
 	public void stopRun(){
 		running = false;
 	}
-	
-	@FunctionalInterface
-	private interface ThrowingConsumer<T> {
 
-	    void acceptThrows(T elem) throws IOException;
+	@Override
+	public void close() throws Exception {
+		microphone.close();
+		ais.close();
+		log.info("Closing resources");
 	}
 
 }

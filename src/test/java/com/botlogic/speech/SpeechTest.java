@@ -45,15 +45,16 @@ public class SpeechTest {
 	
 	@Test
 	@Ignore
-	public void microToText() throws IOException, LineUnavailableException, IllegalAccessException, SpeechException{
+	public void microToText() throws Exception{
 		File file = File.createTempFile("test", ".wav");
-		AudioRecorder audio = AudioRecorder.create(file, 10000, f -> {});
-		audio.record();
-		String text = new SpeechSync(client).obtainTextV1beta(file, Languages.EN_US);
-		log.info(text);
-		TextAnalyzer analyzer = new TextAnalyzer();
-		Entry<Double,String> pair = analyzer.categorize(text, FileUtils.loadFileFromClasspath("newspapers.bin"));
-		log.info(text+"\n Belongs to category: "+pair.getValue());
+		try(AudioRecorder audio = AudioRecorder.create(file, 10000, f -> {})){
+			audio.record();
+			String text = new SpeechSync(client).obtainTextV1beta(file, Languages.EN_US);
+			log.info(text);
+			TextAnalyzer analyzer = new TextAnalyzer();
+			Entry<Double,String> pair = analyzer.categorize(text, FileUtils.loadFileFromClasspath("newspapers.bin"));
+			log.info(text+"\n Belongs to category: "+pair.getValue());
+		}
 	}
 	
 }
