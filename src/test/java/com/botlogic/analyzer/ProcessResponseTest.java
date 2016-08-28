@@ -19,7 +19,7 @@ public class ProcessResponseTest {
 	private final ProcessResponse process;
 	
 	public ProcessResponseTest() throws IOException{
-		File trainingFile = FileUtils.loadFileFromClasspath("training.txt");
+		File trainingFile = FileUtils.loadFileFromClasspath("/training.txt");
 		File fileModel = File.createTempFile("training", ".bin");
 		new TextAnalyzer().trainCategorizer(trainingFile, fileModel);
 		this.process = new ProcessResponse(fileModel);

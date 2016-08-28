@@ -27,18 +27,18 @@ public class SpeechSync {
 		this.client = client;
 	}
 	
-	public String obtainTextV1beta(File file, String languageCode) throws IllegalAccessException, FileNotFoundException, IOException, SpeechException{
+	public String obtainTextV1beta(File file, String languageCode) throws IllegalAccessException, FileNotFoundException, IOException{
 		SpeechDtoIn in = new SpeechDtoIn();
 		RecognitionConfig config = new RecognitionConfig();
 		config.setLanguageCode(languageCode);
 		in.setConfig(config);
 		in.setAudio(RecognitionAudio.create(file));
-		log.debug("Sending: "+in);
+		log.debug("Converting to text: "+file.getAbsolutePath());
 		Response response = client.target(bundle.getString("speech.url.v1beta")).queryParam("key", bundle.getString("speech.key")).request().post(Entity.entity(in, MediaType.APPLICATION_JSON_TYPE));
 		return readResponse(response);
 	}
 	
-	private String readResponse(Response response) throws SpeechException, IllegalAccessException{
+	private String readResponse(Response response) throws IllegalAccessException{
 		if(response.getStatus() == 200){
 			SpeechDtoOut out = response.readEntity(SpeechDtoOut.class);
 			if(out.getResults().size() > 0){
@@ -48,11 +48,13 @@ public class SpeechSync {
 					log.info("Text: "+text);
 					return text;
 				}
+			}else{
+				log.warn("No text found in the audio");
 			}
-			throw new SpeechException("It didn't understand the audio. Response: "+response+" dto: "+out);
 		}else{
 			throw new IllegalAccessException("Errors in the request: "+debugResponse(response));
 		}
+		return null;
 	}
 	
 	private String debugResponse(Response response){

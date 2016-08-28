@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map.Entry;
 
-import javax.sound.sampled.LineUnavailableException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -37,7 +36,7 @@ public class SpeechTest {
 		try {
 			String text = new SpeechSync(client).obtainTextV1beta(FileUtils.loadFileFromClasspath("test.wav"), Languages.EN_US);
 			assertEquals("this is a test let's see", text);
-		} catch (ProcessingException | IllegalAccessException | IOException | SpeechException e) {
+		} catch (ProcessingException | IllegalAccessException | IOException e) {
 			log.error("Unexpected error", e);
 			fail(e.getMessage());
 		}

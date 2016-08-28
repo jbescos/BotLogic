@@ -42,7 +42,6 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 	private final long millisChunkRecording;
 	private volatile boolean running = true;
 	private final AudioFileListener listener;
-	private final long FREQUENCY_CHUNK = 100;
 	private final int HEAD_WAV_BYTES = 52;
 	private final AudioInputStream ais;
 	
@@ -80,17 +79,13 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 		Executor executor = Executors.newSingleThreadExecutor();
 		executor.execute(()-> {
 			try {
-				long max = (millisChunkRecording/FREQUENCY_CHUNK)-1;
-				for(long i=max;i>=0;i--){
-					Thread.sleep(FREQUENCY_CHUNK);
-				}
+				Thread.sleep(millisChunkRecording);
 			} catch (Exception e) {
 				log.error("Timeout", e);
 			} finally {
 				microphone.stop();
 			}
 		});
-		log.info("Microphone start");
 		AudioSystem.write(ais, FILE_TYPE, newAudio);
 		microphone.flush();
 	}
@@ -115,8 +110,8 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 		}
 	}
 	
-	public static AudioRecorder create(File dest, int seconds, AudioFileListener listener) throws LineUnavailableException{
-		AudioRecorder recorder = new AudioRecorder(dest, seconds, listener, new ArrayBlockingQueue<>(20));
+	public static AudioRecorder create(File dest, long millisChunkRecording, AudioFileListener listener) throws LineUnavailableException{
+		AudioRecorder recorder = new AudioRecorder(dest, millisChunkRecording, listener, new ArrayBlockingQueue<>(20));
 		return recorder;
 	}
 	
@@ -133,6 +128,7 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 	@Override
 	public void run() {
 		try {
+			log.info("Start listening");
 			dest.delete();
 			ConsumeAudio consumer = new ConsumeAudio();
 			Executor executor = Executors.newSingleThreadExecutor();
@@ -142,7 +138,9 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 					queue.add(supplier.get());
 			});
 			while(running){
-				log.debug("Queue size: "+queue.size());
+				int size = queue.size();
+				if(size > 10)
+					log.warn("Queue size: "+queue.size());
 				File newAudio = queue.take();
 				consumer.accept(newAudio);
 			}
@@ -153,8 +151,8 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 	}
 	
 	private boolean isWantedAudio(double volume){
-		log.debug("Volume: "+volume);
-		return volume > 0;
+//		log.debug("Volume: "+volume);
+		return volume > 1;
 	}
 	
 	public void stopRun(){
@@ -190,7 +188,7 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 		
 		public void accept(File newAudio) throws IOException, UnsupportedAudioFileException {
 			byte[] chunk = FileUtils.readFileToByteArray(newAudio);
-			double volume = getAvgVolume(chunk);
+			int volume = getAvgVolume(chunk);
 			if(isWantedAudio(volume)){
 				try(AudioInputStream audioMerged = createCombinedInputStream(newAudio, dest)){
 					dest.delete();

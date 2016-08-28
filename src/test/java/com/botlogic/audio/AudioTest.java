@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import javax.sound.sampled.LineUnavailableException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Ignore;
@@ -27,22 +26,11 @@ public class AudioTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void runForever() throws Exception{
-		try(AudioRecorder audio = AudioRecorder.create(File.createTempFile("sequence", ".wav"), 1000, file -> copyFile(file))) {
+		try(AudioRecorder audio = AudioRecorder.create(File.createTempFile("sequence", ".wav"), 1000, file -> log.debug("File: "+file.getAbsolutePath()))) {
 			audio.run();
 		} catch (LineUnavailableException | IOException e) {
-			log.error("Unexpected error",  e);
-			fail(e.getMessage());
-		}
-	}
-	
-	private void copyFile(File toCopy){
-		try {
-			File copy = File.createTempFile("copy", ".wav");
-			log.debug("File saved in : "+copy.getAbsolutePath());
-			FileUtils.copyFile(toCopy, copy);
-		} catch (IOException e) {
 			log.error("Unexpected error",  e);
 			fail(e.getMessage());
 		}
