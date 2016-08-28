@@ -66,7 +66,7 @@ public class TextAnalizerTest {
 	@Ignore
 	public void categorize() throws IOException{
 		try{
-			File fileModel = FileUtils.loadFileFromClasspath("newspapers.bin");
+			File fileModel = FileUtils.loadFileFromClasspath("/newspapers.bin");
 //			File fileModel = File.createTempFile("training", ".bin");
 //			analyzer.trainCategorizer(FileUtils.loadFileFromClasspath("newspapers6517598969977471588.train"), fileModel);
 			Entry<Double, String> pair = analyzer.categorize("I would like to buy a motorcycle, where can I buy one?", fileModel);
@@ -90,7 +90,7 @@ public class TextAnalizerTest {
 	@Test
 	@Ignore
 	public void training() throws IOException{
-		File trainingFile = FileUtils.loadFileFromClasspath("training.txt");
+		File trainingFile = FileUtils.loadFileFromClasspath("/training.txt");
 		File fileModel = File.createTempFile("training", ".bin");
 		analyzer.trainCategorizer(trainingFile, fileModel);
 		expectCategory("order.movement", "Go forward 100 meters", fileModel);

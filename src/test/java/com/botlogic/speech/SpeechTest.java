@@ -34,7 +34,7 @@ public class SpeechTest {
 	@Ignore
 	public void audioToText(){
 		try {
-			String text = new SpeechSync(client).obtainTextV1beta(FileUtils.loadFileFromClasspath("test.wav"), Languages.EN_US);
+			String text = new SpeechSync(client).obtainTextV1beta(FileUtils.loadFileFromClasspath("/test.wav"), Languages.EN_US);
 			assertEquals("this is a test let's see", text);
 		} catch (ProcessingException | IllegalAccessException | IOException e) {
 			log.error("Unexpected error", e);
@@ -51,7 +51,7 @@ public class SpeechTest {
 			String text = new SpeechSync(client).obtainTextV1beta(file, Languages.EN_US);
 			log.info(text);
 			TextAnalyzer analyzer = new TextAnalyzer();
-			Entry<Double,String> pair = analyzer.categorize(text, FileUtils.loadFileFromClasspath("newspapers.bin"));
+			Entry<Double,String> pair = analyzer.categorize(text, FileUtils.loadFileFromClasspath("/newspapers.bin"));
 			log.info(text+"\n Belongs to category: "+pair.getValue());
 		}
 	}
