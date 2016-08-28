@@ -47,7 +47,7 @@ public class SpeechTest {
 	@Ignore
 	public void microToText() throws IOException, LineUnavailableException, IllegalAccessException, SpeechException{
 		File file = File.createTempFile("test", ".wav");
-		AudioRecorder audio = AudioRecorder.create(file, 10);
+		AudioRecorder audio = AudioRecorder.create(file, 10000, f -> {});
 		audio.record();
 		String text = new SpeechSync(client).obtainTextV1beta(file, Languages.EN_US);
 		log.info(text);

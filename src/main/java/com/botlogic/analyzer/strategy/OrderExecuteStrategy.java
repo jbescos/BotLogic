@@ -19,6 +19,8 @@ public class OrderExecuteStrategy implements InstructionStrategy<Map<String, Obj
 		for(WordContent word : words){
 			if(TagConstants.VERB_BASE_FORM.equals(word.getTag()) || TagConstants.PREPOSITION_OR_SUBORDINATING_CONJUNCTION.equals(word.getTag())){
 				content.put("action", word.getWord());
+			}else if(TagConstants.CARDONAL_NUMBER.equals(word.getTag())){
+				content.put("id", word.getWord());
 			}else if(TagConstants.NOUN_SINGULAR_OR_MASS.equals(word.getTag())){
 				@SuppressWarnings("unchecked")
 				List<String> programs = (List<String>) content.get("program");
