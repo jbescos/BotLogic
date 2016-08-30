@@ -28,12 +28,14 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 	private volatile boolean running = true;
 	private final AudioFileListener listener;
 	private final Microphone microphone;
+	private final long millisChunkRecording;
 	
 	private AudioRecorder(File dest, long millisChunkRecording, AudioFileListener listener, BlockingQueue<File> queue) throws LineUnavailableException{
 		this.dest = dest;
 		this.listener = listener;
 		this.queue = queue;
 		this.microphone = new Microphone(millisChunkRecording);
+		this.millisChunkRecording = millisChunkRecording;
 	}
 	
 	public static AudioRecorder create(File dest, long millisChunkRecording, AudioFileListener listener) throws LineUnavailableException{
@@ -59,8 +61,17 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 			ConsumeAudio consumer = new ConsumeAudio();
 			Executor executor = Executors.newSingleThreadExecutor();
 			executor.execute(() -> {
-				while(running)
-					queue.add(microphone.get());
+				while(running){
+					long millis = System.currentTimeMillis();
+					File audio = microphone.get();
+					boolean inserted = queue.offer(audio);
+					if(!inserted){
+						log.warn("Can not save audio "+audio.getAbsolutePath());
+						audio.delete();
+					}
+					long total = System.currentTimeMillis() - millis;
+					log.debug("Lost audio millis: "+(total - millisChunkRecording));
+				}
 			});
 			while(running){
 				int size = queue.size();

@@ -28,6 +28,7 @@ public class Microphone implements Supplier<File>, AutoCloseable{
 	private final AudioInputStream ais;
 	private final TargetDataLine microphone;
 	private final long millisRecord;
+	private final Executor executor = Executors.newSingleThreadExecutor();
 	public final static File FAILED_AUDIO = new File("");
 	
 	public Microphone(long millisRecord) throws LineUnavailableException{
@@ -42,7 +43,6 @@ public class Microphone implements Supplier<File>, AutoCloseable{
 		try {
 			microphone.start();
 			File tmp = File.createTempFile("ztmp_chunk", ".wav");
-			Executor executor = Executors.newSingleThreadExecutor();
 			executor.execute(()-> {
 				try {
 					Thread.sleep(millisRecord);
