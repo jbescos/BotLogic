@@ -5,9 +5,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class AudioUtils {
 
 	private final static int HEAD_WAV_BYTES = 52;
+	private final static Logger log = LogManager.getLogger();
 	
 	public static int getMaxAvg(byte[] audioData, int divideBy){
 		int chunk = audioData.length/divideBy;
@@ -19,6 +23,7 @@ public class AudioUtils {
 			avgs.add(avg);
 			from = to;
 		}
+//		log.debug("AVG: "+avgs);
 		return Collections.max(avgs);
 	}
 	

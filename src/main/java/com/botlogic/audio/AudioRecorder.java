@@ -111,7 +111,7 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 		public void accept(File newAudio) throws IOException, UnsupportedAudioFileException {
 			if(IMicropone.FAILED_AUDIO != newAudio){
 				byte[] chunk = FileUtils.readFileToByteArray(newAudio);
-				int volume = AudioUtils.getMaxAvg(chunk, 1);
+				int volume = AudioUtils.getMaxAvg(chunk, 3);
 				if(isWantedAudio(volume)){
 					try(AudioInputStream audioMerged = createCombinedInputStream(newAudio, dest)){
 						dest.delete();

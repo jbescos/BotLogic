@@ -30,7 +30,7 @@ public class Main {
 
 	public static void main(String[] args) throws LineUnavailableException, Exception {
 		File audio = File.createTempFile("audio", ".wav");
-		try(AudioRecorder recorder = AudioRecorder.create(audio, 1000, new ParseText(), new DualMicrophone(1000, 10))){
+		try(AudioRecorder recorder = AudioRecorder.create(audio, 1000, new ParseText(), new DualMicrophone(1000, 20))){
 			recorder.run();
 		}
 		log.info("Closing application");
@@ -63,7 +63,8 @@ public class Main {
 							Map<String, Object> content = (Map<String, Object>)dto.getInstruction();
 							if(content.containsKey(OrderExecuteStrategy.ACTION)){
 								String actionValue = ((String) content.get(OrderExecuteStrategy.ACTION)).toLowerCase();
-								return !"exit".equals(actionValue);
+								boolean exit = "exit".equals(actionValue) || "finish".equals(actionValue);
+								return !exit;
 							}
 						}
 					}

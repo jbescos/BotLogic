@@ -29,6 +29,8 @@ public class ProcessResponseTest {
 	public void outputs() throws IOException{
 		verifyOutputs(InstructionStrategyFactory.ORDER_MOVEMENT, "Move forward 1 meter");
 		verifyOutputs(InstructionStrategyFactory.ORDER_MOVEMENT, "Turn 50 degrees to the left");
+		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Exit the program");
+		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Finish application");
 		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Switch on the pin 5");
 		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Open the browser");
 		verifyOutputs(InstructionStrategyFactory.ORDER_EXECUTE, "Run this: apt-get update");
