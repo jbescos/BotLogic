@@ -37,6 +37,7 @@ public class Microphone implements IMicropone{
 	public File get() {
 		try {
 			microphone.start();
+//			log.debug("Start recording ----------------------"+System.currentTimeMillis());
 			File tmp = File.createTempFile("ztmp_chunk", ".wav");
 			executor.execute(()-> {
 				try {
@@ -48,6 +49,7 @@ public class Microphone implements IMicropone{
 				}
 			});
 			AudioSystem.write(ais, FILE_TYPE, tmp);
+//			log.debug("Stop recording ----------------------"+System.currentTimeMillis());
 			microphone.flush();
 			return tmp;
 		} catch (Exception e) {

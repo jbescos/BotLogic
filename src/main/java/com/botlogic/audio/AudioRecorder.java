@@ -30,15 +30,19 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 	private final IMicropone microphone;
 	private final long millisChunkRecording;
 	
-	private AudioRecorder(File dest, long millisChunkRecording, AudioFileListener listener) throws LineUnavailableException{
+	private AudioRecorder(File dest, long millisChunkRecording, AudioFileListener listener, IMicropone microphone) throws LineUnavailableException{
 		this.dest = dest;
 		this.listener = listener;
-		this.microphone = new Microphone(millisChunkRecording);
 		this.millisChunkRecording = millisChunkRecording;
+		this.microphone = microphone;
 	}
 	
 	public static AudioRecorder create(File dest, long millisChunkRecording, AudioFileListener listener) throws LineUnavailableException{
-		AudioRecorder recorder = new AudioRecorder(dest, millisChunkRecording, listener);
+		return create(dest, millisChunkRecording, listener, new Microphone(millisChunkRecording));
+	}
+	
+	public static AudioRecorder create(File dest, long millisChunkRecording, AudioFileListener listener, IMicropone microphone) throws LineUnavailableException{
+		AudioRecorder recorder = new AudioRecorder(dest, millisChunkRecording, listener, microphone);
 		return recorder;
 	}
 	
@@ -69,7 +73,7 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 						audio.delete();
 					}
 					long total = System.currentTimeMillis() - millis;
-					log.debug("Lost audio millis: "+(total - millisChunkRecording));
+//					log.debug("Lost audio millis: "+(total - millisChunkRecording));
 				}
 			});
 			while(running){

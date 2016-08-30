@@ -30,7 +30,7 @@ public class Main {
 
 	public static void main(String[] args) throws LineUnavailableException, Exception {
 		File audio = File.createTempFile("audio", ".wav");
-		try(AudioRecorder recorder = AudioRecorder.create(audio, 1000, new ParseText())){
+		try(AudioRecorder recorder = AudioRecorder.create(audio, 1000, new ParseText(), new DualMicrophone(1000, 10))){
 			recorder.run();
 		}
 		log.info("Closing application");
