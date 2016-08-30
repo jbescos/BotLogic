@@ -19,3 +19,4 @@ order.execute Run command exec sh
 order.execute Install the application with apt-get
 order.execute Set the date to 14:00
 order.execute Update the text file
+order.execute Finish application

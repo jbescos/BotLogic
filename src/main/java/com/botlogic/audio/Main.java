@@ -3,6 +3,7 @@ package com.botlogic.audio;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.ws.rs.ProcessingException;
@@ -16,6 +17,8 @@ import org.glassfish.jersey.logging.LoggingFeature;
 
 import com.botlogic.analyzer.DtoOut;
 import com.botlogic.analyzer.ProcessResponse;
+import com.botlogic.analyzer.strategy.InstructionStrategyFactory;
+import com.botlogic.analyzer.strategy.OrderExecuteStrategy;
 import com.botlogic.speech.Languages;
 import com.botlogic.speech.SpeechSync;
 import com.botlogic.utils.FileUtils;
@@ -30,6 +33,8 @@ public class Main {
 		try(AudioRecorder recorder = AudioRecorder.create(audio, 1000, new ParseText())){
 			recorder.run();
 		}
+		log.info("Closing application");
+		System.exit(0);
 	}
 	
 	private static class ParseText implements AudioFileListener {
@@ -43,7 +48,7 @@ public class Main {
 		}
 		
 		@Override
-		public void notify(File file) {
+		public Boolean apply(File file) {
 			try {
 				String text = speech.obtainTextV1beta(file, Languages.EN_US);
 				if(text != null){
@@ -51,11 +56,20 @@ public class Main {
 					log.debug("RESPONSE: "+response);
 					File copy = File.createTempFile("copy_"+text, ".wav");
 					org.apache.commons.io.FileUtils.copyFile(file, copy);
+					DtoOut<?> dto = response.get(0);
+					if(InstructionStrategyFactory.ORDER_EXECUTE.equals(dto.getCategory())){
+						@SuppressWarnings("unchecked")
+						Map<String, Object> content = (Map<String, Object>)dto.getInstruction();
+						if(content.containsKey(OrderExecuteStrategy.ACTION)){
+							String actionValue = ((String) content.get(OrderExecuteStrategy.ACTION)).toLowerCase();
+							return !"exit".equals(actionValue);
+						}
+					}
 				}
 			} catch (IllegalAccessException | IOException | ProcessingException e) {
 				log.error("Unexpected error, can not analyze", e);
 			}
-			
+			return true;
 		}
 		
 	}

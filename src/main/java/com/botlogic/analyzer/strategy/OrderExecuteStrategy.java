@@ -12,13 +12,15 @@ import com.botlogic.analyzer.WordContent;
 
 public class OrderExecuteStrategy implements InstructionStrategy<Map<String, Object>>{
 
+	public static final String ACTION = "action";
+	
 	@Override
 	public Map<String, Object> createInstruction(TextAnalyzer analyzer, String sentence) throws IOException {
 		List<WordContent> words = analyzer.posTagger(sentence);
 		Map<String, Object> content = new HashMap<>();
 		for(WordContent word : words){
 			if(TagConstants.VERB_BASE_FORM.equals(word.getTag()) || TagConstants.PREPOSITION_OR_SUBORDINATING_CONJUNCTION.equals(word.getTag())){
-				content.put("action", word.getWord());
+				content.put(ACTION, word.getWord());
 			}else if(TagConstants.CARDONAL_NUMBER.equals(word.getTag())){
 				content.put("id", word.getWord());
 			}else if(TagConstants.NOUN_SINGULAR_OR_MASS.equals(word.getTag())){

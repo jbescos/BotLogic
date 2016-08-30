@@ -18,7 +18,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.botlogic.analyzer.TextAnalyzer;
-import com.botlogic.audio.AudioRecorder;
+import com.botlogic.audio.Microphone;
 import com.botlogic.utils.FileUtils;
 
 public class SpeechTest {
@@ -45,14 +45,14 @@ public class SpeechTest {
 	@Test
 	@Ignore
 	public void microToText() throws Exception{
-		File file = File.createTempFile("test", ".wav");
-		try(AudioRecorder audio = AudioRecorder.create(file, 10000, f -> {})){
-			audio.record();
+		try(Microphone audio = new Microphone(10000)){
+			File file = audio.get();
 			String text = new SpeechSync(client).obtainTextV1beta(file, Languages.EN_US);
 			log.info(text);
 			TextAnalyzer analyzer = new TextAnalyzer();
 			Entry<Double,String> pair = analyzer.categorize(text, FileUtils.loadFileFromClasspath("/newspapers.bin"));
 			log.info(text+"\n Belongs to category: "+pair.getValue());
+			file.delete();
 		}
 	}
 	

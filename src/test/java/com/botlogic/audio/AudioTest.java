@@ -19,16 +19,16 @@ public class AudioTest {
 	@Test
 	@Ignore
 	public void run() throws Exception{
-		try(AudioRecorder audio = AudioRecorder.create(File.createTempFile("test", ".wav"), 5000, file -> {})){
-			AudioRecorder.printInfo();
-			audio.record();
+		try(Microphone audio = new Microphone(5000)){
+			File file = audio.get();
+//			file.delete();
 		}
 	}
 	
 	@Test
 	@Ignore
 	public void runForever() throws Exception{
-		try(AudioRecorder audio = AudioRecorder.create(File.createTempFile("sequence", ".wav"), 1000, file -> log.debug("File: "+file.getAbsolutePath()))) {
+		try(AudioRecorder audio = AudioRecorder.create(File.createTempFile("sequence", ".wav"), 1000, file -> Boolean.TRUE)) {
 			audio.run();
 		} catch (LineUnavailableException | IOException e) {
 			log.error("Unexpected error",  e);

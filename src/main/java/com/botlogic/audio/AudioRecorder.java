@@ -7,16 +7,11 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.function.Supplier;
 
 import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.apache.commons.io.FileUtils;
@@ -28,71 +23,17 @@ import org.apache.logging.log4j.Logger;
 public class AudioRecorder implements Runnable, AutoCloseable {
 
 	private final static Logger log = LogManager.getLogger();
-	private final static AudioFileFormat.Type FILE_TYPE = AudioFileFormat.Type.WAVE;
-	public final static float SAMPLE_RATE = 16000;
-	private final static int SAMPLE_SIZE_BITS = 16;
-	private final static int CHANNELS = 1;
-	private final static boolean SIGNED = true;
-	private final static boolean BIG_ENDIAN = true;
-//	private final AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, SAMPLE_RATE, SAMPLE_SIZE_BITS, CHANNELS, SAMPLE_SIZE_BITS/8, 8, BIG_ENDIAN);
-	private final AudioFormat format = new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE_BITS, CHANNELS, SIGNED, BIG_ENDIAN);
-	private final TargetDataLine microphone;
 	private final File dest;
 	private final BlockingQueue<File> queue;
-	private final long millisChunkRecording;
 	private volatile boolean running = true;
 	private final AudioFileListener listener;
-	private final int HEAD_WAV_BYTES = 52;
-	private final AudioInputStream ais;
+	private final Microphone microphone;
 	
 	private AudioRecorder(File dest, long millisChunkRecording, AudioFileListener listener, BlockingQueue<File> queue) throws LineUnavailableException{
-		this.microphone = AudioSystem.getTargetDataLine(format);
 		this.dest = dest;
-		this.millisChunkRecording = millisChunkRecording;
 		this.listener = listener;
 		this.queue = queue;
-		this.ais = new AudioInputStream(microphone);
-		this.microphone.open(format);
-	}
-
-	public void record() throws LineUnavailableException, IOException{
-		record(dest);
-	}
-	
-	private void record(File newAudio) throws LineUnavailableException, IOException{
-		microphone.start();
-		Executor executor = Executors.newSingleThreadExecutor();
-		executor.execute(()-> {
-			try {
-				Thread.sleep(millisChunkRecording);
-			} catch (Exception e) {
-				log.error("Timeout", e);
-			} finally {
-				microphone.stop();
-			}
-		});
-		AudioSystem.write(ais, FILE_TYPE, newAudio);
-		microphone.flush();
-	}
-
-	public static void printInfo() throws LineUnavailableException {
-		Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
-		for (Mixer.Info info : mixerInfos) {
-			Mixer m = AudioSystem.getMixer(info);
-			Line.Info[] lineInfos = m.getSourceLineInfo();
-			for (Line.Info lineInfo : lineInfos) {
-				log.info(info.getName() + "---" + lineInfo);
-				Line line = m.getLine(lineInfo);
-				log.info("\t-----" + line);
-			}
-			lineInfos = m.getTargetLineInfo();
-			for (Line.Info lineInfo : lineInfos) {
-				log.info(m + "---" + lineInfo);
-				Line line = m.getLine(lineInfo);
-				log.info("\t-----" + line);
-			}
-
-		}
+		this.microphone = new Microphone(millisChunkRecording);
 	}
 	
 	public static AudioRecorder create(File dest, long millisChunkRecording, AudioFileListener listener) throws LineUnavailableException{
@@ -117,10 +58,9 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 			dest.delete();
 			ConsumeAudio consumer = new ConsumeAudio();
 			Executor executor = Executors.newSingleThreadExecutor();
-			SupplyAudio supplier = new SupplyAudio();
 			executor.execute(() -> {
 				while(running)
-					queue.add(supplier.get());
+					queue.add(microphone.get());
 			});
 			while(running){
 				int size = queue.size();
@@ -150,32 +90,13 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 	    void acceptThrows(T elem) throws IOException;
 	}
 	
-	private class SupplyAudio implements Supplier<File>{
-
-		@SuppressWarnings("serial")
-		@Override
-		public File get() {
-			try {
-				File tmp = File.createTempFile("ztmp_chunk", ".wav");
-				record(tmp);
-				return tmp;
-			} catch (IOException | LineUnavailableException e) {
-				log.error("Unexpected error. Exiting SupplyAudio.", e);
-				stopRun();
-				queue.clear();
-				return new File(""){};
-			}
-		}
-
-	}
-	
 	private class ConsumeAudio {
 		
 		private int numberOfAudios = 0;
 		
 		public void accept(File newAudio) throws IOException, UnsupportedAudioFileException {
 			byte[] chunk = FileUtils.readFileToByteArray(newAudio);
-			int volume = AudioUtils.getMaxAvg(chunk, 3);
+			int volume = AudioUtils.getMaxAvg(chunk, 1);
 			if(isWantedAudio(volume)){
 				try(AudioInputStream audioMerged = createCombinedInputStream(newAudio, dest)){
 					dest.delete();
@@ -184,9 +105,11 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 				}
 			}else if(dest.length() > 0){
 				log.debug("Audios in file: "+numberOfAudios);
-				listener.notify(dest);
+				Boolean continueRecording = listener.apply(dest);
 				dest.delete();
 				numberOfAudios = 0;
+				if(!continueRecording)
+					stopRun();
 			}
 			newAudio.delete();
 		}
@@ -195,8 +118,6 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 	@Override
 	public void close() throws Exception {
 		microphone.close();
-		ais.close();
-		log.info("Closing resources");
 	}
 
 }
