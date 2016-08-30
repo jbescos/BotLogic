@@ -54,22 +54,7 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 		this.ais = new AudioInputStream(microphone);
 		this.microphone.open(format);
 	}
-	
-	private int getAvgVolume(byte[] audioData){
-		long lSum = 0;
-	    for(int i=0; i<audioData.length; i++)
-	        lSum = lSum + audioData[i];
 
-	    double dAvg = lSum / audioData.length;
-
-	    double sumMeanSquare = 0d;
-	    for(int j=0; j<audioData.length; j++)
-	        sumMeanSquare = sumMeanSquare + Math.pow(audioData[j] - dAvg, 2d);
-
-	    double averageMeanSquare = sumMeanSquare / audioData.length;
-	    return (int)(Math.pow(averageMeanSquare,0.5d) + 0.5) - HEAD_WAV_BYTES;
-	}
-	
 	public void record() throws LineUnavailableException, IOException{
 		record(dest);
 	}
@@ -171,7 +156,7 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 		@Override
 		public File get() {
 			try {
-				File tmp = File.createTempFile("audio_recorder_chunk", ".wav");
+				File tmp = File.createTempFile("ztmp_chunk", ".wav");
 				record(tmp);
 				return tmp;
 			} catch (IOException | LineUnavailableException e) {
@@ -186,17 +171,22 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 	
 	private class ConsumeAudio {
 		
+		private int numberOfAudios = 0;
+		
 		public void accept(File newAudio) throws IOException, UnsupportedAudioFileException {
 			byte[] chunk = FileUtils.readFileToByteArray(newAudio);
-			int volume = getAvgVolume(chunk);
+			int volume = AudioUtils.getMaxAvg(chunk, 3);
 			if(isWantedAudio(volume)){
 				try(AudioInputStream audioMerged = createCombinedInputStream(newAudio, dest)){
 					dest.delete();
 					AudioSystem.write(audioMerged, AudioFileFormat.Type.WAVE, dest);
+					numberOfAudios++;
 				}
 			}else if(dest.length() > 0){
+				log.debug("Audios in file: "+numberOfAudios);
 				listener.notify(dest);
 				dest.delete();
+				numberOfAudios = 0;
 			}
 			newAudio.delete();
 		}

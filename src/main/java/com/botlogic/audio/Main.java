@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.sound.sampled.LineUnavailableException;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.logging.LoggingFeature;
 
 import com.botlogic.analyzer.DtoOut;
@@ -33,7 +35,7 @@ public class Main {
 	private static class ParseText implements AudioFileListener {
 
 		private final ProcessResponse process;
-		private final Client client = ClientBuilder.newBuilder().register(JacksonJsonProvider.class).property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER, "FINEST").build();
+		private final Client client = ClientBuilder.newBuilder().register(JacksonJsonProvider.class).property(ClientProperties.READ_TIMEOUT, 20000).property(ClientProperties.CONNECT_TIMEOUT, 20000).property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER, "FINEST").build();
 		private final SpeechSync speech = new SpeechSync(client);
 		
 		public ParseText() throws IOException{
@@ -50,7 +52,7 @@ public class Main {
 					File copy = File.createTempFile("copy_"+text, ".wav");
 					org.apache.commons.io.FileUtils.copyFile(file, copy);
 				}
-			} catch (IllegalAccessException | IOException e) {
+			} catch (IllegalAccessException | IOException | ProcessingException e) {
 				log.error("Unexpected error, can not analyze", e);
 			}
 			
