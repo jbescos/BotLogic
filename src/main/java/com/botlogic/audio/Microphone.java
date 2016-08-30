@@ -3,10 +3,7 @@ package com.botlogic.audio;
 import java.io.File;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.function.Supplier;
 
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
@@ -15,27 +12,25 @@ import javax.sound.sampled.TargetDataLine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Microphone implements Supplier<File>, AutoCloseable{
+public class Microphone implements IMicropone{
 
 	private final static Logger log = LogManager.getLogger();
-	public final static float SAMPLE_RATE = 16000;
-	private final static int SAMPLE_SIZE_BITS = 16;
-	private final static int CHANNELS = 1;
-	private final static boolean SIGNED = true;
-	private final static boolean BIG_ENDIAN = true;
-	private final static AudioFileFormat.Type FILE_TYPE = AudioFileFormat.Type.WAVE;
-	private final AudioFormat FORMAT = new AudioFormat(SAMPLE_RATE, SAMPLE_SIZE_BITS, CHANNELS, SIGNED, BIG_ENDIAN);
 	private final AudioInputStream ais;
 	private final TargetDataLine microphone;
 	private final long millisRecord;
 	private final Executor executor = Executors.newSingleThreadExecutor();
-	public final static File FAILED_AUDIO = new File("");
+	private final MicrophoneEventListener listener;
 	
-	public Microphone(long millisRecord) throws LineUnavailableException{
+	public Microphone(long millisRecord, MicrophoneEventListener listener) throws LineUnavailableException{
 		this.microphone = AudioSystem.getTargetDataLine(FORMAT);
 		this.ais = new AudioInputStream(microphone);
 		this.millisRecord = millisRecord;
 		this.microphone.open(FORMAT);
+		this.listener = listener;
+	}
+	
+	public Microphone(long millisRecord) throws LineUnavailableException{
+		this(millisRecord, null);
 	}
 	
 	@Override
@@ -45,9 +40,9 @@ public class Microphone implements Supplier<File>, AutoCloseable{
 			File tmp = File.createTempFile("ztmp_chunk", ".wav");
 			executor.execute(()-> {
 				try {
-					Thread.sleep(millisRecord);
+					sleep();
 				} catch (Exception e) {
-					log.error("Timeout", e);
+					log.error("Unexpected exception", e);
 				} finally {
 					microphone.stop();
 				}
@@ -69,6 +64,15 @@ public class Microphone implements Supplier<File>, AutoCloseable{
 		log.info("Closing resources");
 	}
 
-	
+	protected void sleep() throws InterruptedException {
+		if(listener != null){
+			long sleepTime = millisRecord - listener.getAlmostEndMillis();
+			Thread.sleep(sleepTime);
+			listener.almostEnd();
+			Thread.sleep(listener.getAlmostEndMillis());
+		}else{
+			Thread.sleep(millisRecord);
+		}
+	}
 	
 }

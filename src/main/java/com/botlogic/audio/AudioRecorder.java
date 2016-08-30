@@ -24,22 +24,21 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 
 	private final static Logger log = LogManager.getLogger();
 	private final File dest;
-	private final BlockingQueue<File> queue;
+	private final BlockingQueue<File> queue = new ArrayBlockingQueue<>(20);
 	private volatile boolean running = true;
 	private final AudioFileListener listener;
-	private final Microphone microphone;
+	private final IMicropone microphone;
 	private final long millisChunkRecording;
 	
-	private AudioRecorder(File dest, long millisChunkRecording, AudioFileListener listener, BlockingQueue<File> queue) throws LineUnavailableException{
+	private AudioRecorder(File dest, long millisChunkRecording, AudioFileListener listener) throws LineUnavailableException{
 		this.dest = dest;
 		this.listener = listener;
-		this.queue = queue;
 		this.microphone = new Microphone(millisChunkRecording);
 		this.millisChunkRecording = millisChunkRecording;
 	}
 	
 	public static AudioRecorder create(File dest, long millisChunkRecording, AudioFileListener listener) throws LineUnavailableException{
-		AudioRecorder recorder = new AudioRecorder(dest, millisChunkRecording, listener, new ArrayBlockingQueue<>(20));
+		AudioRecorder recorder = new AudioRecorder(dest, millisChunkRecording, listener);
 		return recorder;
 	}
 	
@@ -106,24 +105,32 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 		private int numberOfAudios = 0;
 		
 		public void accept(File newAudio) throws IOException, UnsupportedAudioFileException {
-			byte[] chunk = FileUtils.readFileToByteArray(newAudio);
-			int volume = AudioUtils.getMaxAvg(chunk, 1);
-			if(isWantedAudio(volume)){
-				try(AudioInputStream audioMerged = createCombinedInputStream(newAudio, dest)){
+			if(IMicropone.FAILED_AUDIO != newAudio){
+				byte[] chunk = FileUtils.readFileToByteArray(newAudio);
+				int volume = AudioUtils.getMaxAvg(chunk, 1);
+				if(isWantedAudio(volume)){
+					try(AudioInputStream audioMerged = createCombinedInputStream(newAudio, dest)){
+						dest.delete();
+						AudioSystem.write(audioMerged, AudioFileFormat.Type.WAVE, dest);
+						numberOfAudios++;
+					}
+				}else if(dest.length() > 0){
+					log.debug("Audios in file: "+numberOfAudios);
+					notifyAudio(dest);
 					dest.delete();
-					AudioSystem.write(audioMerged, AudioFileFormat.Type.WAVE, dest);
-					numberOfAudios++;
+					numberOfAudios = 0;
 				}
-			}else if(dest.length() > 0){
-				log.debug("Audios in file: "+numberOfAudios);
-				Boolean continueRecording = listener.apply(dest);
-				dest.delete();
-				numberOfAudios = 0;
-				if(!continueRecording)
-					stopRun();
+				newAudio.delete();
+			}else{
+				notifyAudio(newAudio);
 			}
-			newAudio.delete();
 		}
+	}
+	
+	private void notifyAudio(File file){
+		Boolean continueRecording = listener.apply(file);
+		if(!continueRecording)
+			stopRun();
 	}
 
 	@Override

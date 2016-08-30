@@ -49,27 +49,31 @@ public class Main {
 		
 		@Override
 		public Boolean apply(File file) {
-			try {
-				String text = speech.obtainTextV1beta(file, Languages.EN_US);
-				if(text != null){
-					List<DtoOut<?>> response = process.process(text);
-					log.debug("RESPONSE: "+response);
-					File copy = File.createTempFile("copy_"+text, ".wav");
-					org.apache.commons.io.FileUtils.copyFile(file, copy);
-					DtoOut<?> dto = response.get(0);
-					if(InstructionStrategyFactory.ORDER_EXECUTE.equals(dto.getCategory())){
-						@SuppressWarnings("unchecked")
-						Map<String, Object> content = (Map<String, Object>)dto.getInstruction();
-						if(content.containsKey(OrderExecuteStrategy.ACTION)){
-							String actionValue = ((String) content.get(OrderExecuteStrategy.ACTION)).toLowerCase();
-							return !"exit".equals(actionValue);
+			if(IMicropone.FAILED_AUDIO != file){
+				try {
+					String text = speech.obtainTextV1beta(file, Languages.EN_US);
+					if(text != null){
+						List<DtoOut<?>> response = process.process(text);
+						log.debug("RESPONSE: "+response);
+						File copy = File.createTempFile("copy_"+text, ".wav");
+						org.apache.commons.io.FileUtils.copyFile(file, copy);
+						DtoOut<?> dto = response.get(0);
+						if(InstructionStrategyFactory.ORDER_EXECUTE.equals(dto.getCategory())){
+							@SuppressWarnings("unchecked")
+							Map<String, Object> content = (Map<String, Object>)dto.getInstruction();
+							if(content.containsKey(OrderExecuteStrategy.ACTION)){
+								String actionValue = ((String) content.get(OrderExecuteStrategy.ACTION)).toLowerCase();
+								return !"exit".equals(actionValue);
+							}
 						}
 					}
+				} catch (IllegalAccessException | IOException | ProcessingException e) {
+					log.error("Unexpected error, can not analyze", e);
 				}
-			} catch (IllegalAccessException | IOException | ProcessingException e) {
-				log.error("Unexpected error, can not analyze", e);
+				return true;
+			}else{
+				return false;
 			}
-			return true;
 		}
 		
 	}

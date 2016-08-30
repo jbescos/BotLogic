@@ -19,7 +19,7 @@ public class AudioTest {
 	@Test
 	@Ignore
 	public void run() throws Exception{
-		try(Microphone audio = new Microphone(5000)){
+		try(IMicropone audio = new Microphone(5000)){
 			File file = audio.get();
 //			file.delete();
 		}

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import com.botlogic.audio.Microphone;
+import com.botlogic.audio.IMicropone;
 
 public class SpeechDtoIn {
 
@@ -37,7 +37,7 @@ public class SpeechDtoIn {
 	public static class RecognitionConfig {
 		private String encoding = "LINEAR16";
 		//private int sampleRate = 44100;
-		private int sampleRate = (int) Microphone.SAMPLE_RATE;
+		private int sampleRate = (int) IMicropone.SAMPLE_RATE;
 		private String languageCode = Languages.EN_US;
 		private int maxAlternatives = 1;
 		private boolean profanityFilter = false;
