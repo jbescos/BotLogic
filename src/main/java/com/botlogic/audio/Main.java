@@ -30,7 +30,7 @@ public class Main {
 
 	public static void main(String[] args) throws LineUnavailableException, Exception {
 		File audio = File.createTempFile("audio", ".wav");
-		try(AudioRecorder recorder = AudioRecorder.create(audio, 1000, new ParseText(), new DualMicrophone(1000, 20))){
+		try(AudioRecorder recorder = AudioRecorder.create(audio, 1000, new ParseText(), new DualMicrophone(1000, 100))){
 			recorder.run();
 		}
 		log.info("Closing application");
@@ -55,16 +55,22 @@ public class Main {
 					if(text != null){
 						List<DtoOut<?>> response = process.process(text);
 						log.debug("RESPONSE: "+response);
-						File copy = File.createTempFile("copy_"+text, ".wav");
-						org.apache.commons.io.FileUtils.copyFile(file, copy);
+//						File copy = File.createTempFile("copy_"+text, ".wav");
+//						org.apache.commons.io.FileUtils.copyFile(file, copy);
 						DtoOut<?> dto = response.get(0);
 						if(InstructionStrategyFactory.ORDER_EXECUTE.equals(dto.getCategory())){
 							@SuppressWarnings("unchecked")
 							Map<String, Object> content = (Map<String, Object>)dto.getInstruction();
-							if(content.containsKey(OrderExecuteStrategy.ACTION)){
-								String actionValue = ((String) content.get(OrderExecuteStrategy.ACTION)).toLowerCase();
-								boolean exit = "exit".equals(actionValue) || "finish".equals(actionValue);
-								return !exit;
+							if(content.containsKey(OrderExecuteStrategy.PROGRAM)){
+								@SuppressWarnings("unchecked")
+								List<String> actionValues = ((List<String>) content.get(OrderExecuteStrategy.PROGRAM));
+								for(String actionValue : actionValues){
+									String program = actionValue.toLowerCase();
+									boolean exit = "exit".equals(program) || "finish".equals(program) || "finalize".equals(program);
+									if(exit)
+										return false;
+								}
+								return true;
 							}
 						}
 					}

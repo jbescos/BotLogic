@@ -13,6 +13,7 @@ import com.botlogic.analyzer.WordContent;
 public class OrderExecuteStrategy implements InstructionStrategy<Map<String, Object>>{
 
 	public static final String ACTION = "action";
+	public static final String PROGRAM = "program";
 	
 	@Override
 	public Map<String, Object> createInstruction(TextAnalyzer analyzer, String sentence) throws IOException {
@@ -25,7 +26,7 @@ public class OrderExecuteStrategy implements InstructionStrategy<Map<String, Obj
 				content.put("id", word.getWord());
 			}else if(TagConstants.NOUN_SINGULAR_OR_MASS.equals(word.getTag())){
 				@SuppressWarnings("unchecked")
-				List<String> programs = (List<String>) content.get("program");
+				List<String> programs = (List<String>) content.get(PROGRAM);
 				if(programs == null){
 					programs = new ArrayList<>();
 					content.put("program", programs);
