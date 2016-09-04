@@ -28,21 +28,15 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 	private volatile boolean running = true;
 	private final AudioFileListener listener;
 	private final IMicropone microphone;
-	private final long millisChunkRecording;
 	
-	private AudioRecorder(File dest, long millisChunkRecording, AudioFileListener listener, IMicropone microphone) throws LineUnavailableException{
+	private AudioRecorder(File dest, AudioFileListener listener, IMicropone microphone) throws LineUnavailableException{
 		this.dest = dest;
 		this.listener = listener;
-		this.millisChunkRecording = millisChunkRecording;
 		this.microphone = microphone;
 	}
 	
-	public static AudioRecorder create(File dest, long millisChunkRecording, AudioFileListener listener) throws LineUnavailableException{
-		return create(dest, millisChunkRecording, listener, new Microphone(millisChunkRecording));
-	}
-	
-	public static AudioRecorder create(File dest, long millisChunkRecording, AudioFileListener listener, IMicropone microphone) throws LineUnavailableException{
-		AudioRecorder recorder = new AudioRecorder(dest, millisChunkRecording, listener, microphone);
+	public static AudioRecorder create(File dest, AudioFileListener listener, IMicropone microphone) throws LineUnavailableException{
+		AudioRecorder recorder = new AudioRecorder(dest, listener, microphone);
 		return recorder;
 	}
 	
@@ -65,15 +59,12 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 			Executor executor = Executors.newSingleThreadExecutor();
 			executor.execute(() -> {
 				while(running){
-					long millis = System.currentTimeMillis();
 					File audio = microphone.get();
 					boolean inserted = queue.offer(audio);
 					if(!inserted){
 						log.warn("Can not save audio "+audio.getAbsolutePath());
 						audio.delete();
 					}
-					long total = System.currentTimeMillis() - millis;
-//					log.debug("Lost audio millis: "+(total - millisChunkRecording));
 				}
 			});
 			while(running){

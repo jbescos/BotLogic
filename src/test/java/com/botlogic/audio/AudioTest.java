@@ -28,7 +28,7 @@ public class AudioTest {
 	@Test
 	@Ignore
 	public void runForever() throws Exception{
-		try(AudioRecorder audio = AudioRecorder.create(File.createTempFile("sequence", ".wav"), 1000, file -> Boolean.TRUE, new DualMicrophone(1000, 10))) {
+		try(AudioRecorder audio = AudioRecorder.create(File.createTempFile("sequence", ".wav"), file -> Boolean.TRUE, new DualMicrophone(1000, 10))) {
 			audio.run();
 		} catch (LineUnavailableException | IOException e) {
 			log.error("Unexpected error",  e);

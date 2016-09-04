@@ -30,7 +30,7 @@ public class Main {
 
 	public static void main(String[] args) throws LineUnavailableException, Exception {
 		File audio = File.createTempFile("audio", ".wav");
-		try(AudioRecorder recorder = AudioRecorder.create(audio, 1000, new ParseText(), new DualMicrophone(1000, 100))){
+		try(AudioRecorder recorder = AudioRecorder.create(audio, new ParseText(), new DualMicrophone(1000, 100))){
 			recorder.run();
 		}
 		log.info("Closing application");
@@ -55,8 +55,6 @@ public class Main {
 					if(text != null){
 						List<DtoOut<?>> response = process.process(text);
 						log.debug("RESPONSE: "+response);
-//						File copy = File.createTempFile("copy_"+text, ".wav");
-//						org.apache.commons.io.FileUtils.copyFile(file, copy);
 						DtoOut<?> dto = response.get(0);
 						if(InstructionStrategyFactory.ORDER_EXECUTE.equals(dto.getCategory())){
 							@SuppressWarnings("unchecked")
