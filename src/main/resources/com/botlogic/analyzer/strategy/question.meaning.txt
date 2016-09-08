@@ -1,0 +1,1 @@
+WP=[\w\W]* -> null;NN=(?i)meaning* -> descriptor=^;NN=[\w\W]* -> search=^;.=\\? -> null

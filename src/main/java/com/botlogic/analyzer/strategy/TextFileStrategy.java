@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -66,39 +67,29 @@ public class TextFileStrategy implements InstructionStrategy<Map<String,Set<Stri
 	}
 	
 	private Map<String, Set<String>> processEntry(Map<String, Set<String>> tagPerWords, String line){
-		String chunks[] = line.split(CHUNK_SEPARATOR);
 		Map<String, Set<String>> newEntry = new HashMap<>();
-		for(String chunk : chunks){
-			String matchAndReference[] = chunk.split(PAIR_SEPARATOR);
-			String match = matchAndReference[0];
-			String reference = matchAndReference[1];
-			String[] pairMatch = match.split(EQUALS);
-			String tag = pairMatch[0];
-			if(tagPerWords.containsKey(tag)){
-				String[] pairRef = reference.split(EQUALS);
-				Pattern pattern = Pattern.compile(pairMatch[1]);
-				for(String word : tagPerWords.get(tag)){
+		List<ChunksInfo> chunks = getChunksInfo(line);
+		for(ChunksInfo chunk : chunks){
+			if(tagPerWords.containsKey(chunk.tag)){
+				Pattern pattern = Pattern.compile(chunk.regexp);
+				for(String word : tagPerWords.get(chunk.tag)){
 					if(pattern.matcher(word).find()){
-						if(!NULL.equals(reference)){
-							String name = pairRef[0];
-							String value = pairRef[1];
+						if(chunk.name != null && chunk.value != null){
+							String value = chunk.value;
 							if(value.charAt(0) == REFERENCE){
 								value = word;
 							}
-//							log.debug(word+" ["+tag+"] allowed. Adding "+name+"="+value.toLowerCase());
-							Set<String> words = newEntry.get(name);
+							log.debug(word+" ["+chunk.tag+"] allowed. Adding "+chunk.name+"="+value.toLowerCase());
+							Set<String> words = newEntry.get(chunk.name);
 							if(words == null){
 								words = new LinkedHashSet<>();
-								newEntry.put(name, words);
+								newEntry.put(chunk.name, words);
 							}
 							words.add(value.toLowerCase());
 						}
-					}else{
-						newEntry.clear();
-						return newEntry;
 					}
 				}
-				tagPerWords.remove(tag);
+				tagPerWords.remove(chunk.tag);
 			}else{
 				newEntry.clear();
 				return newEntry;
@@ -117,6 +108,43 @@ public class TextFileStrategy implements InstructionStrategy<Map<String,Set<Stri
 			}
 		}
 		return false;
+	}
+	
+	private List<ChunksInfo> getChunksInfo(String line){
+		List<ChunksInfo> chunks = new ArrayList<>();
+		for(String chunk : line.split(CHUNK_SEPARATOR)){
+			String matchAndReference[] = chunk.split(PAIR_SEPARATOR);
+			String match = matchAndReference[0];
+			String reference = matchAndReference[1];
+			String[] pairMatch = match.split(EQUALS);
+			String tag = pairMatch[0];
+			String[] pairRef = reference.split(EQUALS);
+			String name = null;
+			String value = null;
+			if(!NULL.equals(reference)){
+				name = pairRef[0];
+				value = pairRef[1];
+			}
+			ChunksInfo info = new ChunksInfo(pairMatch[1], tag, reference, name, value);
+			chunks.add(info);
+		}
+		return chunks;
+	}
+	
+	private class ChunksInfo{
+		private final String regexp;
+		private final String tag;
+		private final String reference;
+		private final String name;
+		private final String value;
+		public ChunksInfo(String regexp, String tag, String reference, String name, String value) {
+			this.regexp = regexp;
+			this.tag = tag;
+			this.reference = reference;
+			this.name = name;
+			this.value = value;
+		}
+		
 	}
 	
 }

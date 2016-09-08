@@ -2,10 +2,17 @@ question.time What time is it?
 question.time How many hours left to noon?
 question.time Is it time to lunch?
 question.time What is the time now in Japan?
+question.time When did Jorge born?
+question.time When is the football match?
 question.meaning What is the meaning of machine learning?
+question.meaning Who was Albert Einstein?
 question.location Where is Zaragoza?
 question.location Where is the closest pub from here?
 question.location Where is the milk?
+question.location Where is the street Uncastillo?
+question.location Where is the main square?
+question.location Where is the avenue Cesareo Alierta?
+question.location What is the location of Czech Republic?
 order.movement Move forward 5 meters
 order.movement Rotate 5 degrees left
 order.movement Turn right
