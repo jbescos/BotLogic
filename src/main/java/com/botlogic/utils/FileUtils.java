@@ -14,6 +14,7 @@ public class FileUtils {
 		File file = File.createTempFile("classpathFile", ".data");
 		try(InputStream inputStream = FileUtils.class.getResourceAsStream(fileName); OutputStream outputStream = new FileOutputStream(file)){
 			IOUtils.copy(inputStream, outputStream);
+			file.deleteOnExit();
 			return file;
 		}
 	}

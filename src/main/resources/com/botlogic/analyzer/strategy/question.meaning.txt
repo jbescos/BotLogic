@@ -1,3 +1,3 @@
-WP=[\w\W]* -> null;NN=(?i)meaning* -> descriptor=^;NNP=[\w\W]* -> search=^;.=\\? -> null
-WP=[\w\W]* -> null;NN=(?i)meaning* -> descriptor=^;NN=[\w\W]* -> search=^;.=\\? -> null
-WP=[\w\W]* -> null;NNP=[\w\W]* -> search=^;.=\\? -> null
+WP=[\w\W]* -> null;NN=(?i)meaning* -> descriptor=^;NNP=[\w\W]* -> search=^
+WP=[\w\W]* -> null;NN=(?i)meaning* -> descriptor=^;NN=[\w\W]* -> search=^
+WP=[\w\W]* -> null;NNP=[\w\W]* -> search=^
