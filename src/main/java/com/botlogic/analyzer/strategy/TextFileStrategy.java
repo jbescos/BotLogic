@@ -69,6 +69,7 @@ public class TextFileStrategy implements InstructionStrategy<Map<String,Set<Stri
 	private Map<String, Set<String>> processEntry(Map<String, Set<String>> tagPerWords, String line){
 		Map<String, Set<String>> newEntry = new HashMap<>();
 		List<ChunksInfo> chunks = getChunksInfo(line);
+		Set<String> tagsToRemove = new HashSet<>();
 		for(ChunksInfo chunk : chunks){
 			if(tagPerWords.containsKey(chunk.tag)){
 				Pattern pattern = Pattern.compile(chunk.regexp);
@@ -79,7 +80,7 @@ public class TextFileStrategy implements InstructionStrategy<Map<String,Set<Stri
 							if(value.charAt(0) == REFERENCE){
 								value = word;
 							}
-							log.debug(word+" ["+chunk.tag+"] allowed. Adding "+chunk.name+"="+value.toLowerCase());
+//							log.debug(word+" ["+chunk.tag+"] allowed. Adding "+chunk.name+"="+value.toLowerCase());
 							Set<String> words = newEntry.get(chunk.name);
 							if(words == null){
 								words = new LinkedHashSet<>();
@@ -89,11 +90,15 @@ public class TextFileStrategy implements InstructionStrategy<Map<String,Set<Stri
 						}
 					}
 				}
-				tagPerWords.remove(chunk.tag);
+				tagsToRemove.add(chunk.tag);
+//				log.debug("Evaluated line: "+line);
 			}else{
 				newEntry.clear();
 				return newEntry;
 			}
+		}
+		for(String tag : tagsToRemove){
+			tagPerWords.remove(tag);
 		}
 		return newEntry;
 	}
@@ -125,26 +130,28 @@ public class TextFileStrategy implements InstructionStrategy<Map<String,Set<Stri
 				name = pairRef[0];
 				value = pairRef[1];
 			}
-			ChunksInfo info = new ChunksInfo(pairMatch[1], tag, reference, name, value);
+			ChunksInfo info = new ChunksInfo(pairMatch[1], tag, name, value);
 			chunks.add(info);
 		}
+//		log.debug(chunks);
 		return chunks;
 	}
 	
 	private class ChunksInfo{
 		private final String regexp;
 		private final String tag;
-		private final String reference;
 		private final String name;
 		private final String value;
-		public ChunksInfo(String regexp, String tag, String reference, String name, String value) {
+		public ChunksInfo(String regexp, String tag, String name, String value) {
 			this.regexp = regexp;
 			this.tag = tag;
-			this.reference = reference;
 			this.name = name;
 			this.value = value;
 		}
-		
+		@Override
+		public String toString() {
+			return "ChunksInfo [regexp=" + regexp + ", tag=" + tag + ", name=" + name + ", value=" + value + "]";
+		}
 	}
 	
 }

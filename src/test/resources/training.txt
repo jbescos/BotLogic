@@ -6,6 +6,7 @@ question.time When did Jorge born?
 question.time When is the football match?
 question.meaning What is the meaning of machine learning?
 question.meaning Who was Albert Einstein?
+question.meaning Who is Luis?
 question.location Where is Zaragoza?
 question.location Where is the closest pub from here?
 question.location Where is the milk?

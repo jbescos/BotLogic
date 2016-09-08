@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.botlogic.analyzer.strategy.TextFileStrategy;
@@ -22,13 +21,18 @@ import com.botlogic.utils.FileUtils;
 public class ProcessResponseTest {
 
 	private final static Logger log = LogManager.getLogger();
-	private final ProcessResponse process;
+	private final static ProcessResponse process;
 	
-	public ProcessResponseTest() throws IOException{
-		File trainingFile = FileUtils.loadFileFromClasspath("/training.txt");
-		File fileModel = File.createTempFile("training", ".bin");
-		new TextAnalyzer().trainCategorizer(trainingFile, fileModel);
-		this.process = new ProcessResponse(fileModel);
+	static{
+		try {
+			File trainingFile = FileUtils.loadFileFromClasspath("/training.txt");
+			File fileModel = File.createTempFile("training", ".bin");
+			new TextAnalyzer().trainCategorizer(trainingFile, fileModel);
+			process = new ProcessResponse(fileModel);
+		} catch (IOException e) {
+			log.error("Unexpected error", e);
+			throw new ExceptionInInitializerError(e);
+		}
 	}
 	
 	@Test
@@ -105,7 +109,6 @@ public class ProcessResponseTest {
 	}
 	
 	@Test
-	@Ignore
 	public void questionMeaning() throws IOException{
 		Pattern pattern = Pattern.compile("(?i)meaning*");
 		assertTrue(pattern.matcher("meaning").find());
@@ -121,6 +124,9 @@ public class ProcessResponseTest {
 		
 		instruction = verifyOutputs("question.meaning", "Who is Newton?");
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "search", "newton"));
+		
+		instruction = verifyOutputs("question.meaning", "What is the meaning of Mars?");
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "search", "mars"));
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "descriptor", "meaning"));
 	}
 	
