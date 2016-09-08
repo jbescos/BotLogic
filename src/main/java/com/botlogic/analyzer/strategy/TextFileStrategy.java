@@ -85,7 +85,7 @@ public class TextFileStrategy implements InstructionStrategy<Map<String,Set<Stri
 							if(value.charAt(0) == REFERENCE){
 								value = word;
 							}
-							log.debug(word+" ["+tag+"] allowed. Adding "+name+"="+value.toLowerCase());
+//							log.debug(word+" ["+tag+"] allowed. Adding "+name+"="+value.toLowerCase());
 							Set<String> words = newEntry.get(name);
 							if(words == null){
 								words = new LinkedHashSet<>();

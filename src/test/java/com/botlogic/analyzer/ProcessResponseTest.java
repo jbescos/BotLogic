@@ -69,8 +69,13 @@ public class ProcessResponseTest {
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "program", "time"));
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "arguments", "11:00"));
 		
-		instruction = verifyOutputs("question.time", "What time is it?");
-		instruction = verifyOutputs("question.time", "Is it noon?.");
+		instruction = verifyOutputs("question.time", "What time is it now?");
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "search", "time"));
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "descriptor", "now"));
+		
+		instruction = verifyOutputs("question.time", "What time is it in China?.");
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "search", "time"));
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "descriptor", "china"));
 		
 	}
 	
