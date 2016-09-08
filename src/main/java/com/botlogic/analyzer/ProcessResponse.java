@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.botlogic.analyzer.strategy.InstructionStrategy;
-import com.botlogic.analyzer.strategy.InstructionStrategyFactory;
+import com.botlogic.analyzer.strategy.TextFileStrategy;
 
 public class ProcessResponse {
 
@@ -31,9 +31,9 @@ public class ProcessResponse {
 			DtoOut<Object> dto = new DtoOut<>();
 			dto.setProbability(entry.getKey());
 			dto.setSentence(sentence);
-			InstructionStrategy<?> strategy = InstructionStrategyFactory.create(entry);
+			InstructionStrategy<?> strategy = new TextFileStrategy(entry.getValue(), analyzer);
 			dto.setCategory(entry.getValue());
-			dto.setInstruction(strategy.createInstruction(analyzer, sentence));
+			dto.setInstruction(strategy.createInstruction(sentence));
 			response.add(dto);
 		}
 		log.info(System.currentTimeMillis() - time + " millis");

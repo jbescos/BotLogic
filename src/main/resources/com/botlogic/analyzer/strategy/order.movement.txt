@@ -1,0 +1,7 @@
+TO=to -> null;NN=[\w\W]* -> direction=^NN
+TO=to -> null;NNS=[\w\W]* -> direction=^NNS
+CD=[\d\D]* -> amount=^CD
+VB=[\w\W]* -> action=^VB
+NN=[\w\W]* -> units=^NN
+NNS=[\w\W]* -> units=^NNS
+RB=[\w\W]* -> direction=^RB

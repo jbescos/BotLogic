@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.ws.rs.ProcessingException;
@@ -17,8 +18,7 @@ import org.glassfish.jersey.logging.LoggingFeature;
 
 import com.botlogic.analyzer.DtoOut;
 import com.botlogic.analyzer.ProcessResponse;
-import com.botlogic.analyzer.strategy.InstructionStrategyFactory;
-import com.botlogic.analyzer.strategy.OrderExecuteStrategy;
+import com.botlogic.analyzer.strategy.TextFileStrategy;
 import com.botlogic.speech.Languages;
 import com.botlogic.speech.SpeechSync;
 import com.botlogic.utils.FileUtils;
@@ -55,22 +55,12 @@ public class Main {
 					if(text != null){
 						List<DtoOut<?>> response = process.process(text);
 						log.debug("RESPONSE: "+response);
-						DtoOut<?> dto = response.get(0);
-						if(InstructionStrategyFactory.ORDER_EXECUTE.equals(dto.getCategory())){
-							@SuppressWarnings("unchecked")
-							Map<String, Object> content = (Map<String, Object>)dto.getInstruction();
-							if(content.containsKey(OrderExecuteStrategy.PROGRAM)){
-								@SuppressWarnings("unchecked")
-								List<String> actionValues = ((List<String>) content.get(OrderExecuteStrategy.PROGRAM));
-								for(String actionValue : actionValues){
-									String program = actionValue.toLowerCase();
-									boolean exit = "exit".equals(program) || "finish".equals(program) || "finalize".equals(program);
-									if(exit)
-										return false;
-								}
-								return true;
-							}
+						@SuppressWarnings("unchecked")
+						DtoOut<Map<String,Set<String>>> dto = (DtoOut<Map<String, Set<String>>>) response.get(0);
+						if("order.execute".equals(dto.getCategory())){
+							return !TextFileStrategy.contains(dto.getInstruction(), "program", "exit", "finalize", "finish");
 						}
+						return true;
 					}
 				} catch (IllegalAccessException | IOException | ProcessingException e) {
 					log.error("Unexpected error, can not analyze", e);
