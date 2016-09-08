@@ -1,2 +1,3 @@
-WRB=[\w\W]* -> null;NN=[\w\W]* -> location=^;NNP=[\w\W]* -> search=^;.=\\? -> null
+WRB=[\w\W]* -> null;NN=[\w\W]* -> location=^;NNP=[\w\W]* -> search=^
 NN=[\w\W]* -> location=^
+NNP=[\w\W]* -> search=^

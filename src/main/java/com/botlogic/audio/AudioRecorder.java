@@ -110,7 +110,7 @@ public class AudioRecorder implements Runnable, AutoCloseable {
 						numberOfAudios++;
 					}
 				}else if(dest.length() > 0){
-					log.debug("Audios in file: "+numberOfAudios);
+//					log.debug("Audios in file: "+numberOfAudios);
 					notifyAudio(dest);
 					dest.delete();
 					numberOfAudios = 0;

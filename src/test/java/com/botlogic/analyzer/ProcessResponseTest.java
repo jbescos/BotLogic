@@ -80,6 +80,10 @@ public class ProcessResponseTest {
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "action", "update"));
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "program", "time"));
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "arguments", "11:00"));
+		
+		instruction = verifyOutputs("order.execute", "execute program Marriott");
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "action", "execute"));
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "program", "marriott"));
 	}
 	
 	@Test
@@ -106,6 +110,12 @@ public class ProcessResponseTest {
 		instruction = verifyOutputs("question.location", "Where is the street Slavojova?.");
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "search", "slavojova"));
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "location", "street"));
+		
+		instruction = verifyOutputs("question.location", "Where is Spain");
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "search", "spain"));
+		
+		instruction = verifyOutputs("question.location", "What is the location of Spain");
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "search", "spain"));
 	}
 	
 	@Test
@@ -128,6 +138,13 @@ public class ProcessResponseTest {
 		instruction = verifyOutputs("question.meaning", "What is the meaning of Mars?");
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "search", "mars"));
 		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "descriptor", "meaning"));
+		
+		instruction = verifyOutputs("question.meaning", "what's the meaning of life");
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "search", "life"));
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "descriptor", "meaning"));
+		
+		instruction = verifyOutputs("question.meaning", "what does it mean chair");
+		assertTrue(instruction.toString(), TextFileStrategy.contains(instruction, "search", "chair"));
 	}
 	
 	@SuppressWarnings("unchecked")

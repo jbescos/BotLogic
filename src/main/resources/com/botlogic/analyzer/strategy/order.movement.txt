@@ -5,3 +5,4 @@ VB=[\w\W]* -> action=^
 NN=[\w\W]* -> units=^
 NNS=[\w\W]* -> units=^
 RB=[\w\W]* -> direction=^
+VBN=(?i)left -> direction=^

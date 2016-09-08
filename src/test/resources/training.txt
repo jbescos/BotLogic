@@ -7,6 +7,7 @@ question.time When is the football match?
 question.meaning What is the meaning of machine learning?
 question.meaning Who was Albert Einstein?
 question.meaning Who is Luis?
+question.meaning What does it mean table?
 question.location Where is Zaragoza?
 question.location Where is the closest pub from here?
 question.location Where is the milk?
@@ -29,3 +30,6 @@ order.execute Set the date to 14:00
 order.execute Update the text file
 order.execute Finish application
 order.execute Exit application
+order.execute Execute program BB
+order.execute Execute application scheduler
+order.execute Run this command

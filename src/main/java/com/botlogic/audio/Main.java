@@ -58,7 +58,7 @@ public class Main {
 						@SuppressWarnings("unchecked")
 						DtoOut<Map<String,Set<String>>> dto = (DtoOut<Map<String, Set<String>>>) response.get(0);
 						if("order.execute".equals(dto.getCategory())){
-							return !TextFileStrategy.contains(dto.getInstruction(), "program", "exit", "finalize", "finish");
+							return !TextFileStrategy.contains(dto.getInstruction(), "action", "exit", "finalize", "finish");
 						}
 						return true;
 					}
