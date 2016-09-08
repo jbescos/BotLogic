@@ -51,6 +51,7 @@ public class Microphone implements IMicropone{
 			AudioSystem.write(ais, FILE_TYPE, tmp);
 //			log.debug("Stop recording ----------------------"+System.currentTimeMillis());
 			microphone.flush();
+			tmp.deleteOnExit();
 			return tmp;
 		} catch (Exception e) {
 			log.error("Can not record the audio", e);

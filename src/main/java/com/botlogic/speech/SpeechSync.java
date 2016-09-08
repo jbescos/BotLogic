@@ -33,7 +33,7 @@ public class SpeechSync {
 		config.setLanguageCode(languageCode);
 		in.setConfig(config);
 		in.setAudio(RecognitionAudio.create(file));
-		log.debug("Converting to text: "+file.getAbsolutePath());
+//		log.debug("Converting to text: "+file.getAbsolutePath());
 		Response response = client.target(bundle.getString("speech.url.v1beta")).queryParam("key", bundle.getString("speech.key")).request().post(Entity.entity(in, MediaType.APPLICATION_JSON_TYPE));
 		return readResponse(response);
 	}

@@ -36,7 +36,7 @@ public class ProcessResponse {
 			dto.setInstruction(strategy.createInstruction(sentence));
 			response.add(dto);
 		}
-		log.info(System.currentTimeMillis() - time + " millis");
+		log.info(System.currentTimeMillis() - time + " millis. RESPONSE: "+response);
 		return response;
 	}
 	
