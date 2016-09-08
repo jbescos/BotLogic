@@ -1,5 +1,5 @@
-JJ=[\w\W]* -> action=^JJ;NN=[\w\W]* -> program=^NN
-VB=[\w\W]* -> action=^VB
-IN=[\w\W]* -> action=^IN
-CD=[\w\W]* -> arguments=^CD
-NN=[\w\W]* -> program=^NN
+JJ=[\w\W]* -> action=^;NN=[\w\W]* -> program=^
+VB=[\w\W]* -> action=^
+IN=[\w\W]* -> action=^
+CD=[\w\W]* -> arguments=^
+NN=[\w\W]* -> program=^
