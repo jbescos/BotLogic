@@ -1,7 +1,6 @@
 package com.botlogic.client.audio;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +50,7 @@ public class Main {
 						return !contains(dto.getInstruction(), "program", "exit", "finalize", "finish");
 					}
 					return true;
-				} catch (IOException e) {
+				} catch (Exception e) {
 					log.error("Unexpected error, can not analyze", e);
 				}
 				return true;

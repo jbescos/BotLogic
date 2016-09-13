@@ -1,6 +1,7 @@
 *.class
 *.log
 
+.settings/*
 target/*
 temp*
 # Mobile Tools for Java (J2ME)
