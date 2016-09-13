@@ -1,6 +1,7 @@
 package com.botlogic.client.audio;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,13 +44,18 @@ public class Main {
 		
 		@Override
 		public Boolean apply(File file) {
+			log.debug("Reciveing audio file "+file.getName());
 			if(IMicropone.FAILED_AUDIO != file){
 				try {
-					DtoOut<Map<String,Set<String>>> dto = client.getFromAudio(file).get(0);
-					if("order.execute".equals(dto.getCategory())){
-						return !contains(dto.getInstruction(), "program", "exit", "finalize", "finish");
+					List<DtoOut<Map<String,Set<String>>>> dtos = client.getFromAudio(file);
+					log.debug(dtos.toString());
+					if(dtos.size() > 0){
+						DtoOut<Map<String,Set<String>>> dto = dtos.get(0);
+						if("order.execute".equals(dto.getCategory())){
+							return !contains(dto.getInstruction(), "program", "exit", "finalize", "finish");
+						}
+						return true;
 					}
-					return true;
 				} catch (Exception e) {
 					log.error("Unexpected error, can not analyze", e);
 				}

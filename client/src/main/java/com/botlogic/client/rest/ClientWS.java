@@ -20,10 +20,13 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 public class ClientWS {
 
+	private final static Logger log = LogManager.getLogger();
 	private final Client client = ClientBuilder.newBuilder().register(JacksonJsonProvider.class).property(ClientProperties.READ_TIMEOUT, 20000).property(ClientProperties.CONNECT_TIMEOUT, 20000).property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER, "FINEST").register(MultiPartFeature.class).build();
 	private final ResourceBundle bundle = ResourceBundle.getBundle("botlogic");
 	private final String URL = bundle.getString("server.url");
@@ -52,6 +55,7 @@ public class ClientWS {
 				login();
 				return getFromAudio(audio);
 			}else if(code == STATUS_FORBBIDEN){
+				log.debug("Not authorized");
 				throw new IllegalAccessException("Not autorized");
 			}
 			throw new IllegalAccessException("Unexpected response code "+code+". "+response);
@@ -66,12 +70,15 @@ public class ClientWS {
 	}
 	
 	public void login() throws IllegalAccessException {
+		log.debug("Doing login");
 		Response response = client.target(LOGIN_URL).queryParam("username", LOGIN).queryParam("password", PASSWORD).request().get();
 		int code = response.getStatus();
 		if(code != STATUS_OK){
+			log.warn("Error doing login");
 			throw new IllegalAccessException(LOGIN+" doesn't exist. Create an user account."); 
 		}
 		authCookie = response.getCookies().get(COOKIE_AUTH_NAME).getValue();
+		log.debug("Logged successfuly");
 	}
 
 }
