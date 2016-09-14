@@ -77,6 +77,7 @@ public class ClientWS {
 			log.warn("Error doing login");
 			throw new IllegalAccessException(LOGIN+" doesn't exist. Create an user account."); 
 		}
+		log.debug("Cookies: "+response.getCookies());
 		authCookie = response.getCookies().get(COOKIE_AUTH_NAME).getValue();
 		log.debug("Logged successfuly");
 	}
