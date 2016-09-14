@@ -83,17 +83,6 @@ public class TextAnalyzer {
 		}
 	}
 
-	public Span[] names(String... sentences) throws InvalidFormatException,
-			IOException {
-		try (InputStream modelIn = getClass().getResourceAsStream("/com/botlogic/server/analyzer/en-ner-person.bin")) {
-			TokenNameFinderModel model = new TokenNameFinderModel(modelIn);
-			NameFinderME nameFinder = new NameFinderME(model);
-			Span names[] = nameFinder.find(sentences);
-			nameFinder.clearAdaptiveData();
-			return names;
-		}
-	}
-
 	public String[] chunker(String[] toks, String[] tags)
 			throws InvalidFormatException, IOException {
 		try (InputStream modelIn = getClass().getResourceAsStream("/com/botlogic/server/analyzer/en-chunker.bin")) {
