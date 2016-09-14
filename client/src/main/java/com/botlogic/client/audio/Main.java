@@ -1,6 +1,9 @@
 package com.botlogic.client.audio;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,7 +47,7 @@ public class Main {
 		
 		@Override
 		public Boolean apply(File file) {
-			log.debug("Reciveing audio file "+file.getName());
+			log.debug("Receiving audio file "+file.getName());
 			if(IMicropone.FAILED_AUDIO != file){
 				try {
 					List<DtoOut<Map<String,Set<String>>>> dtos = client.getFromAudio(file);

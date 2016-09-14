@@ -2,6 +2,8 @@
 *.log
 
 .settings/*
+client/.settings/*
+server/.settings/*
 target/*
 temp*
 # Mobile Tools for Java (J2ME)

@@ -61,6 +61,7 @@ public class SimplifyResource {
 			out.flush();
 		}
 		String text = speech.obtainTextV1beta(audio, Languages.EN_US);
+		audio.delete();
 		if(text != null){
 			List<DtoOut<?>> response = process.process(text);
 			return Response.ok(response).build();
