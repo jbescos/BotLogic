@@ -15,6 +15,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -22,12 +23,11 @@ import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 public class ClientWS {
 
 	private final static Logger log = LogManager.getLogger();
-	private final Client client = ClientBuilder.newBuilder().register(JacksonJsonProvider.class).property(ClientProperties.READ_TIMEOUT, 20000).property(ClientProperties.CONNECT_TIMEOUT, 20000).property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER, "FINEST").register(MultiPartFeature.class).build();
+	private final Client client = ClientBuilder.newBuilder().register(JacksonFeature.class).property(ClientProperties.READ_TIMEOUT, 20000).property(ClientProperties.CONNECT_TIMEOUT, 20000).property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER, "FINEST").register(MultiPartFeature.class).build();
 	private final ResourceBundle bundle = ResourceBundle.getBundle("botlogic");
 	private final String URL = bundle.getString("server.url");
 	private final String LOGIN = bundle.getString("login.user");

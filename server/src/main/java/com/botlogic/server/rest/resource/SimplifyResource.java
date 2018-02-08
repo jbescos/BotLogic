@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -31,7 +32,6 @@ import com.botlogic.client.audio.Languages;
 import com.botlogic.client.rest.DtoOut;
 import com.botlogic.server.analyzer.ProcessResponse;
 import com.botlogic.server.speech.SpeechSync;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 @Path(SimplifyResource.PATH)
 @Produces(MediaType.APPLICATION_JSON)
@@ -40,7 +40,7 @@ public class SimplifyResource {
 	private final static Logger log = LogManager.getLogger();
 	static final String PATH = "/simplify";
 	private final ProcessResponse process;
-	private final Client client = ClientBuilder.newBuilder().register(JacksonJsonProvider.class).property(ClientProperties.READ_TIMEOUT, 20000).property(ClientProperties.CONNECT_TIMEOUT, 20000).property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER, "FINEST").build();
+	private final Client client = ClientBuilder.newBuilder().register(JacksonFeature.class).property(ClientProperties.READ_TIMEOUT, 20000).property(ClientProperties.CONNECT_TIMEOUT, 20000).property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER, "FINEST").build();
 	private final SpeechSync speech = new SpeechSync(client);
 	
 	@Inject

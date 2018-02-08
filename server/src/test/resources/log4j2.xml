@@ -12,6 +12,7 @@
 
     <Loggers>
         <Logger name="com.botlogic" level="debug"/>
+        <Logger name="org.glassfish" level="debug"/>
 
         <Root level="debug">
             <AppenderRef ref="STDOUT"/>
